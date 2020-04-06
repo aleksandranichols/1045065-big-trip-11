@@ -290,7 +290,7 @@ const positions = {
   afterbegin: `afterbegin`,
   afterend: `afterend`,
   beforeend: `beforeend`
-}
+};
 
 const renderComponent = (position, component, place) => {
   place.insertAdjacentHTML(position, component);
