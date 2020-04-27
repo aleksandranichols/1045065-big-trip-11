@@ -1,11 +1,12 @@
-import { returnTripInfo } from './components/tripinfo.js';
-import { returnTripCost } from './components/tripcost.js';
-import { returnNavigation } from './components/navigation.js';
-import { returnFilters } from './components/filters.js';
-import { returnSorting } from './components/sorting.js';
-import { returnTripDetails } from './components/tripdetails.js';
-import { returnEditEvent } from './components/editevent.js';
-import { returnEvent } from './components/event.js';
+import {returnTripInfo} from './components/tripinfo.js';
+import {returnTripCost} from './components/tripcost.js';
+import {returnNavigation} from './components/navigation.js';
+import {returnFilters} from './components/filters.js';
+import {returnSorting} from './components/sorting.js';
+import {returnTripDetails} from './components/tripdetails.js';
+import {returnEditEvent} from './components/editevent.js';
+import {returnEvent} from './components/event.js';
+import {generateTripEvents} from './mocks/event.js';
 
 const positions = {
   afterbegin: `afterbegin`,
@@ -32,11 +33,12 @@ renderComponent(positions.beforeend, returnTripDetails(), tripEvents);
 
 const NUMBER_OF_EVENTS = 3;
 const generateEvents = (numberOfEvents) => {
+  const eventData = generateTripEvents(numberOfEvents);
   const events = [];
   const tripEventsList = document.querySelector(`.trip-events__list`);
-  renderComponent(positions.beforeend, returnEditEvent(), tripEventsList);
-  for (let i = 0; i < numberOfEvents; i++) {
-    events.push(returnEvent());
+  renderComponent(positions.beforeend, returnEditEvent(eventData[0]), tripEventsList);
+  for (let i = 1; i < numberOfEvents; i++) {
+    events.push(returnEvent(eventData[i]));
   }
   renderComponent(`beforeend`, events.join(``), tripEventsList);
 };

@@ -1,10 +1,18 @@
-export const returnEditEvent = () => (`<li class="trip-events__item">
+import {splitAString} from './utils.js';
+
+export const returnEditEvent = (tripEvent) => {
+
+  let {startMinutes, startHours, startDay, startMonth, startYear} = tripEvent.startDates;
+  let {endMinutes, endHours, endDay, endMonth} = tripEvent.endDates;
+  const eventIcon = splitAString(tripEvent.type.toLowerCase(), ` `);
+
+  return `<li class="trip-events__item">
   <form class="event  event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle-1">
           <span class="visually-hidden">Choose event type</span>
-          <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
+          <img class="event__type-icon" width="17" height="17" src="img/icons/${eventIcon[0]}.png" alt="Event type icon">
         </label>
         <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -71,9 +79,9 @@ export const returnEditEvent = () => (`<li class="trip-events__item">
 
       <div class="event__field-group  event__field-group--destination">
         <label class="event__label  event__type-output" for="event-destination-1">
-          Flight to
+          ${tripEvent.type}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Chamonix" list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${tripEvent.city}" list="destination-list-1">
         <datalist id="destination-list-1">
           <option value="Amsterdam"></option>
           <option value="Geneva"></option>
@@ -85,12 +93,12 @@ export const returnEditEvent = () => (`<li class="trip-events__item">
         <label class="visually-hidden" for="event-start-time-1">
           From
         </label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="18/03/19 12:25">
+        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startDay}/${startMonth}/${startYear} ${startHours}:${startMinutes}">
         &mdash;
         <label class="visually-hidden" for="event-end-time-1">
           To
         </label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="18/03/19 13:35">
+        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endDay}/${endMonth}/${startYear} ${endHours}:${endMinutes}">
       </div>
 
       <div class="event__field-group  event__field-group--price">
@@ -98,7 +106,7 @@ export const returnEditEvent = () => (`<li class="trip-events__item">
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="160">
+        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${tripEvent.price}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -170,4 +178,5 @@ export const returnEditEvent = () => (`<li class="trip-events__item">
       </section>
     </section>
   </form>
-</li>`);
+</li>`;
+};

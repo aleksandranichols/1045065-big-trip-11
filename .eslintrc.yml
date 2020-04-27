@@ -7,4 +7,7 @@ env:
   browser: true
   commonjs: true
 
-extends: 'htmlacademy/es6'
+extends:
+  - "htmlacademy/es6"
+rules:
+    object-curly-spacing: ["error", "never"]
