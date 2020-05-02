@@ -86,6 +86,68 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./src/components/constants.js":
+/*!*************************************!*\
+  !*** ./src/components/constants.js ***!
+  \*************************************/
+/*! exports provided: HOURS_NAME, MINUTES_NAME, DAYS_NAME, MONTH_NAMES, TYPES, CITIES, DESCRIPTIONS_CONDENSED, OFFER_NAMES, TWO_DAYS_IN_MINUTES, ONE_DAY_IN_MINUTES, HOURS_IN_DAY, MINUTES_IN_HOUR, NUMBER_OF_EVENTS, NUMBER_OF_OFFERS, OfferPrice, EventPrice, positions */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HOURS_NAME", function() { return HOURS_NAME; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MINUTES_NAME", function() { return MINUTES_NAME; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DAYS_NAME", function() { return DAYS_NAME; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MONTH_NAMES", function() { return MONTH_NAMES; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TYPES", function() { return TYPES; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CITIES", function() { return CITIES; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DESCRIPTIONS_CONDENSED", function() { return DESCRIPTIONS_CONDENSED; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OFFER_NAMES", function() { return OFFER_NAMES; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TWO_DAYS_IN_MINUTES", function() { return TWO_DAYS_IN_MINUTES; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ONE_DAY_IN_MINUTES", function() { return ONE_DAY_IN_MINUTES; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HOURS_IN_DAY", function() { return HOURS_IN_DAY; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MINUTES_IN_HOUR", function() { return MINUTES_IN_HOUR; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NUMBER_OF_EVENTS", function() { return NUMBER_OF_EVENTS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NUMBER_OF_OFFERS", function() { return NUMBER_OF_OFFERS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OfferPrice", function() { return OfferPrice; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EventPrice", function() { return EventPrice; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "positions", function() { return positions; });
+const HOURS_NAME = `H `;
+const MINUTES_NAME = `M `;
+const DAYS_NAME = `D `;
+
+const MONTH_NAMES = [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `Jun`, `Jul`, `Aug`, `Sep`, `Oct`, `Nov`, `Dec`];
+
+const TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
+const CITIES = [`Chicago`, `New York`, `Los Angeles`, `Saint-Louis`, `Houston`, `Washington DC`];
+const DESCRIPTIONS_CONDENSED = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
+const OFFER_NAMES = [`Add luggage`, `Add meal`, `Switch to comfort class`, `Travel by train`, `Choose seats`];
+const TWO_DAYS_IN_MINUTES = 2880;
+const ONE_DAY_IN_MINUTES = 1440;
+const HOURS_IN_DAY = 24;
+const MINUTES_IN_HOUR = 60;
+const NUMBER_OF_EVENTS = 15;
+const NUMBER_OF_OFFERS = 3;
+
+const OfferPrice = {
+  MIN: 5,
+  MAX: 15
+};
+
+const EventPrice = {
+  MIN: 0,
+  MAX: 60
+};
+
+const positions = {
+  afterbegin: `afterbegin`,
+  afterend: `afterend`,
+  beforeend: `beforeend`
+};
+
+
+/***/ }),
+
 /***/ "./src/components/editevent.js":
 /*!*************************************!*\
   !*** ./src/components/editevent.js ***!
@@ -103,6 +165,7 @@ const returnEditEvent = (tripEvent) => {
 
   let {startMinutes, startHours, startDay, startMonth, startYear} = tripEvent.startDates;
   let {endMinutes, endHours, endDay, endMonth} = tripEvent.endDates;
+  let {description, photo} = tripEvent.destination;
   const eventIcon = Object(_utils_js__WEBPACK_IMPORTED_MODULE_0__["splitAString"])(tripEvent.type.toLowerCase(), ` `);
 
   return `<li class="trip-events__item">
@@ -275,9 +338,52 @@ const returnEditEvent = (tripEvent) => {
           </div>
         </div>
       </section>
+      <section class="event__section  event__section--destination">
+        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+        <p class="event__destination-description">${description}</p>
+        <div class="event__photos-container">
+          <div class="event__photos-tape">
+            <img class="event__photo" src="${photo}" alt="Event photo">
+            <img class="event__photo" src="${photo}" alt="Event photo">
+            <img class="event__photo" src="${photo}" alt="Event photo">
+            <img class="event__photo" src="${photo}" alt="Event photo">
+            <img class="event__photo" src="${photo}" alt="Event photo">
+          </div>
+        </div>
+      </section>
     </section>
   </form>
 </li>`;
+};
+
+
+/***/ }),
+
+/***/ "./src/components/event-offers.js":
+/*!****************************************!*\
+  !*** ./src/components/event-offers.js ***!
+  \****************************************/
+/*! exports provided: returnEventOffers */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "returnEventOffers", function() { return returnEventOffers; });
+const returnOfferMarkUp = (name, price) => {
+  return (`<li class="event__offer">
+          <span class="event__offer-title">${name}</span>
+          &plus;
+          &euro;&nbsp;<span class="event__offer-price">${price}</span>
+         </li>`);
+};
+
+const returnEventOffers = (offers) => {
+  let {names, prices} = offers;
+  const offersMarkUp = [];
+  for (let i = 0; i < names.length; i++) {
+    offersMarkUp.push(returnOfferMarkUp(names[i], prices[i]));
+  }
+  return (`<ul class="event__selected-offers">${offersMarkUp.join(`\n`)}</ul>`);
 };
 
 
@@ -294,6 +400,10 @@ const returnEditEvent = (tripEvent) => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "returnEvent", function() { return returnEvent; });
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils.js */ "./src/components/utils.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./constants.js */ "./src/components/constants.js");
+/* harmony import */ var _event_offers_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./event-offers.js */ "./src/components/event-offers.js");
+
+
 
 
 const returnEvent = (tripEvent) => {
@@ -315,12 +425,9 @@ const returnEvent = (tripEvent) => {
   };
 
   const generateEventDuration = () => {
-    const HOURS_NAME = `H `;
-    const MINUTES_NAME = `M `;
-    const DAYS_NAME = `D `;
-    const durationDays = generateDuration(endDay, startDay, DAYS_NAME);
-    const durationHours = generateDuration(endHours, startHours, HOURS_NAME);
-    const durationMinutes = generateDuration(endMinutes, startMinutes, MINUTES_NAME);
+    const durationDays = generateDuration(endDay, startDay, _constants_js__WEBPACK_IMPORTED_MODULE_1__["DAYS_NAME"]);
+    const durationHours = generateDuration(endHours, startHours, _constants_js__WEBPACK_IMPORTED_MODULE_1__["HOURS_NAME"]);
+    const durationMinutes = generateDuration(endMinutes, startMinutes, _constants_js__WEBPACK_IMPORTED_MODULE_1__["MINUTES_NAME"]);
 
     const eventDuration = {durationDays, durationHours, durationMinutes};
     return eventDuration;
@@ -352,7 +459,7 @@ const returnEvent = (tripEvent) => {
 
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
-    ${tripEvent.offers}
+    ${Object(_event_offers_js__WEBPACK_IMPORTED_MODULE_2__["returnEventOffers"])(tripEvent.offers)}
     </ul>
 
     <button class="event__rollup-btn" type="button">
@@ -459,6 +566,24 @@ const returnSorting = () => (`<form class="trip-events__trip-sort  trip-sort" ac
 
 /***/ }),
 
+/***/ "./src/components/trip-days.js":
+/*!*************************************!*\
+  !*** ./src/components/trip-days.js ***!
+  \*************************************/
+/*! exports provided: returnTripList */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "returnTripList", function() { return returnTripList; });
+const returnTripList = () =>
+  (`<ul class="trip-days">
+  </ul>`
+  );
+
+
+/***/ }),
+
 /***/ "./src/components/tripcost.js":
 /*!************************************!*\
   !*** ./src/components/tripcost.js ***!
@@ -486,15 +611,23 @@ const returnTripCost = () => (`<p class="trip-info__cost">
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "returnTripDetails", function() { return returnTripDetails; });
-const returnTripDetails = () => (`<ul class="trip-days">
-  <li class="trip-days__item  day">
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./constants.js */ "./src/components/constants.js");
+
+
+const returnTripDetails = (tripEvent, counter) => {
+  let {startDay, startMonth, startYear} = tripEvent.startDates;
+  const startMonthShort = _constants_js__WEBPACK_IMPORTED_MODULE_0__["MONTH_NAMES"][startMonth - 1];
+
+  return `<li class="trip-days__item  day">
     <div class="day__info">
-      <span class="day__counter">1</span>
-      <time class="day__date" datetime="2019-03-18">MAR 18</time>
+      <span class="day__counter">${counter}</span>
+      <time class="day__date" datetime="${startYear}-${startMonth}-${startDay}">${startMonthShort} ${startDay}</time>
     </div>
 
     <ul class="trip-events__list">
-    </ul>`);
+    </ul>
+  </li>`;
+};
 
 
 /***/ }),
@@ -535,7 +668,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "returnRandomElementInArray", function() { return returnRandomElementInArray; });
 const getRandomIntegerInRange = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
-const splitAString = (string, delimeter) => string.split(delimeter);
+const splitAString = (string, delimiter) => string.split(delimiter);
 
 const returnRandomArray = (array, min, max) => {
   const random = [];
@@ -569,10 +702,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_navigation_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/navigation.js */ "./src/components/navigation.js");
 /* harmony import */ var _components_filters_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/filters.js */ "./src/components/filters.js");
 /* harmony import */ var _components_sorting_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/sorting.js */ "./src/components/sorting.js");
-/* harmony import */ var _components_tripdetails_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/tripdetails.js */ "./src/components/tripdetails.js");
-/* harmony import */ var _components_editevent_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/editevent.js */ "./src/components/editevent.js");
-/* harmony import */ var _components_event_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/event.js */ "./src/components/event.js");
-/* harmony import */ var _mocks_event_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./mocks/event.js */ "./src/mocks/event.js");
+/* harmony import */ var _components_trip_days_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/trip-days.js */ "./src/components/trip-days.js");
+/* harmony import */ var _components_tripdetails_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/tripdetails.js */ "./src/components/tripdetails.js");
+/* harmony import */ var _components_editevent_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/editevent.js */ "./src/components/editevent.js");
+/* harmony import */ var _components_event_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/event.js */ "./src/components/event.js");
+/* harmony import */ var _mocks_event_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./mocks/event.js */ "./src/mocks/event.js");
+/* harmony import */ var _components_constants__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./components/constants */ "./src/components/constants.js");
 
 
 
@@ -583,11 +718,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const positions = {
-  afterbegin: `afterbegin`,
-  afterend: `afterend`,
-  beforeend: `beforeend`
-};
+
 
 const renderComponent = (position, component, place) => {
   place.insertAdjacentHTML(position, component);
@@ -596,26 +727,47 @@ const renderComponent = (position, component, place) => {
 const tripMain = document.querySelector(`.trip-main`);
 const tripControlsMenuHeading = document.querySelector(`.trip-controls h2:first-of-type`);
 const tripControlsFiltersHeading = document.querySelector(`.trip-controls h2:last-of-type`);
-renderComponent(positions.afterbegin, Object(_components_tripinfo_js__WEBPACK_IMPORTED_MODULE_0__["returnTripInfo"])(), tripMain);
+renderComponent(_components_constants__WEBPACK_IMPORTED_MODULE_10__["positions"].afterbegin, Object(_components_tripinfo_js__WEBPACK_IMPORTED_MODULE_0__["returnTripInfo"])(), tripMain);
 const tripInfo = document.querySelector(`.trip-info`);
-renderComponent(positions.beforeend, Object(_components_tripcost_js__WEBPACK_IMPORTED_MODULE_1__["returnTripCost"])(), tripInfo);
-renderComponent(positions.afterend, Object(_components_navigation_js__WEBPACK_IMPORTED_MODULE_2__["returnNavigation"])(), tripControlsMenuHeading);
-renderComponent(positions.afterend, Object(_components_filters_js__WEBPACK_IMPORTED_MODULE_3__["returnFilters"])(), tripControlsFiltersHeading);
+renderComponent(_components_constants__WEBPACK_IMPORTED_MODULE_10__["positions"].beforeend, Object(_components_tripcost_js__WEBPACK_IMPORTED_MODULE_1__["returnTripCost"])(), tripInfo);
+renderComponent(_components_constants__WEBPACK_IMPORTED_MODULE_10__["positions"].afterend, Object(_components_navigation_js__WEBPACK_IMPORTED_MODULE_2__["returnNavigation"])(), tripControlsMenuHeading);
+renderComponent(_components_constants__WEBPACK_IMPORTED_MODULE_10__["positions"].afterend, Object(_components_filters_js__WEBPACK_IMPORTED_MODULE_3__["returnFilters"])(), tripControlsFiltersHeading);
 
 const tripEvents = document.querySelector(`.trip-events`);
-renderComponent(positions.beforeend, Object(_components_sorting_js__WEBPACK_IMPORTED_MODULE_4__["returnSorting"])(), tripEvents);
-renderComponent(positions.beforeend, Object(_components_tripdetails_js__WEBPACK_IMPORTED_MODULE_5__["returnTripDetails"])(), tripEvents);
+renderComponent(_components_constants__WEBPACK_IMPORTED_MODULE_10__["positions"].beforeend, Object(_components_sorting_js__WEBPACK_IMPORTED_MODULE_4__["returnSorting"])(), tripEvents);
+renderComponent(_components_constants__WEBPACK_IMPORTED_MODULE_10__["positions"].beforeend, Object(_components_trip_days_js__WEBPACK_IMPORTED_MODULE_5__["returnTripList"])(), tripEvents);
 
-const NUMBER_OF_EVENTS = 3;
+const NUMBER_OF_EVENTS = 15;
+const tripDaysList = document.querySelector(`.trip-days`);
+
 const generateEvents = (numberOfEvents) => {
-  const eventData = Object(_mocks_event_js__WEBPACK_IMPORTED_MODULE_8__["generateTripEvents"])(numberOfEvents);
-  const events = [];
-  const tripEventsList = document.querySelector(`.trip-events__list`);
-  renderComponent(positions.beforeend, Object(_components_editevent_js__WEBPACK_IMPORTED_MODULE_6__["returnEditEvent"])(eventData[0]), tripEventsList);
-  for (let i = 1; i < numberOfEvents; i++) {
-    events.push(Object(_components_event_js__WEBPACK_IMPORTED_MODULE_7__["returnEvent"])(eventData[i]));
+  const eventData = Object(_mocks_event_js__WEBPACK_IMPORTED_MODULE_9__["generateTripEvents"])(numberOfEvents);
+  renderComponent(_components_constants__WEBPACK_IMPORTED_MODULE_10__["positions"].beforeend, Object(_components_editevent_js__WEBPACK_IMPORTED_MODULE_7__["returnEditEvent"])(eventData[0]), tripDaysList);
+  let listCounter = 1;
+  const days = [];
+  for (let i = 0; i < eventData.length; i++) {
+    let counter = i - 1;
+    if (counter < 0) {
+      counter++;
+    }
+    const currentEventDay = eventData[i].startDates.startDay;
+
+    if (days.some((day) => day.currentEventDay === currentEventDay)) {
+      const tripDays = Array.from(document.querySelectorAll(`.trip-days__item`)).find((tripDay) => tripDay.querySelector(`.day__counter`).textContent === (listCounter - 1).toString()).querySelector(`.trip-events__list`);
+      renderComponent(_components_constants__WEBPACK_IMPORTED_MODULE_10__["positions"].beforeend, Object(_components_event_js__WEBPACK_IMPORTED_MODULE_8__["returnEvent"])(eventData[i]), tripDays);
+    } else {
+      days.push({listCounter, currentEventDay});
+      renderComponent(_components_constants__WEBPACK_IMPORTED_MODULE_10__["positions"].beforeend, Object(_components_tripdetails_js__WEBPACK_IMPORTED_MODULE_6__["returnTripDetails"])(eventData[i], listCounter), tripDaysList);
+      let tripDays = Array.from(document.querySelectorAll(`.trip-days__item`)).find((tripDay) => tripDay.querySelector(`.day__counter`).textContent === listCounter.toString());
+      if (tripDays === undefined) {
+        tripDays = document.querySelector(`.trip-days__item`).querySelector(`.trip-events__list`);
+      } else {
+        tripDays = tripDays.querySelector(`.trip-events__list`);
+      }
+      renderComponent(_components_constants__WEBPACK_IMPORTED_MODULE_10__["positions"].beforeend, Object(_components_event_js__WEBPACK_IMPORTED_MODULE_8__["returnEvent"])(eventData[i]), tripDays);
+      listCounter++;
+    }
   }
-  renderComponent(`beforeend`, events.join(``), tripEventsList);
 };
 
 generateEvents(NUMBER_OF_EVENTS);
@@ -634,30 +786,22 @@ generateEvents(NUMBER_OF_EVENTS);
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generateTripEvents", function() { return generateTripEvents; });
 /* harmony import */ var _components_utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/utils.js */ "./src/components/utils.js");
+/* harmony import */ var _components_constants_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/constants.js */ "./src/components/constants.js");
 
 
-const types = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
-const cities = [`Chicago`, `New York`, `Los Angeles`, `Saint-Louis`, `Houston`, `Washington DC`];
-const descriptionsCondensed = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
-const offerNames = [`Add luggage`, `Add meal`, `Switch to comfort class`, `Travel by train`, `Choose seats`];
 
-const TWO_DAYS_IN_MINUTES = 2880;
-const ONE_DAY_IN_MINUTES = 1440;
-const HOURS_IN_DAY = 24;
-const MINUTES_IN_HOUR = 60;
-const eventTimeInMinutes = Object(_components_utils_js__WEBPACK_IMPORTED_MODULE_0__["getRandomIntegerInRange"])(0, TWO_DAYS_IN_MINUTES);
+const eventTimeInMinutes = Object(_components_utils_js__WEBPACK_IMPORTED_MODULE_0__["getRandomIntegerInRange"])(0, _components_constants_js__WEBPACK_IMPORTED_MODULE_1__["TWO_DAYS_IN_MINUTES"]);
 
 const generateEventStartDates = () => {
   const startDate = new Date();
   const startMinutes = startDate.getMinutes();
   const startHours = startDate.getHours();
-  const startDay = startDate.getDate();
-  const startMonth = startDate.getMonth();
+  const startDay = startDate.getDate() + Object(_components_utils_js__WEBPACK_IMPORTED_MODULE_0__["getRandomIntegerInRange"])(1, 5);
+  // since getMonth() returns results from 0, add + 1
+  const startMonth = startDate.getMonth() + 1;
   const startYear = startDate.getFullYear();
 
-  let eventStartDates = {};
-  eventStartDates = {startMinutes, startHours, startDay, startMonth, startYear};
-  return eventStartDates;
+  return {startMinutes, startHours, startDay, startMonth, startYear};
 };
 
 const generateEventEndDates = (startDates) => {
@@ -665,13 +809,13 @@ const generateEventEndDates = (startDates) => {
   let endMonth;
   let endDay;
   let endHours;
-  let endMinutes = eventTimeInMinutes % MINUTES_IN_HOUR;
-  if (eventTimeInMinutes > ONE_DAY_IN_MINUTES) {
-    endDay = Math.trunc(Math.trunc(eventTimeInMinutes / MINUTES_IN_HOUR) / HOURS_IN_DAY);
-    endHours = Math.trunc(eventTimeInMinutes / MINUTES_IN_HOUR) % HOURS_IN_DAY;
+  let endMinutes = eventTimeInMinutes % _components_constants_js__WEBPACK_IMPORTED_MODULE_1__["MINUTES_IN_HOUR"];
+  if (eventTimeInMinutes > _components_constants_js__WEBPACK_IMPORTED_MODULE_1__["ONE_DAY_IN_MINUTES"]) {
+    endDay = Math.trunc(Math.trunc(eventTimeInMinutes / _components_constants_js__WEBPACK_IMPORTED_MODULE_1__["MINUTES_IN_HOUR"]) / _components_constants_js__WEBPACK_IMPORTED_MODULE_1__["HOURS_IN_DAY"]);
+    endHours = Math.trunc(eventTimeInMinutes / _components_constants_js__WEBPACK_IMPORTED_MODULE_1__["MINUTES_IN_HOUR"]) % _components_constants_js__WEBPACK_IMPORTED_MODULE_1__["HOURS_IN_DAY"];
   } else {
     endDay = startDay;
-    endHours = Math.trunc(eventTimeInMinutes / MINUTES_IN_HOUR);
+    endHours = Math.trunc(eventTimeInMinutes / _components_constants_js__WEBPACK_IMPORTED_MODULE_1__["MINUTES_IN_HOUR"]);
   }
 
   if (startDay > endDay) {
@@ -680,58 +824,36 @@ const generateEventEndDates = (startDates) => {
     endMonth = startMonth;
   }
 
-  let eventEndDates = {};
-  eventEndDates = {endMinutes, endHours, endDay, endMonth};
-  return eventEndDates;
+  return {endMinutes, endHours, endDay, endMonth};
 };
 
 const returnRandomDescription = () => {
-  const descriptions = Object(_components_utils_js__WEBPACK_IMPORTED_MODULE_0__["splitAString"])(descriptionsCondensed, `.`);
+  const descriptions = Object(_components_utils_js__WEBPACK_IMPORTED_MODULE_0__["splitAString"])(_components_constants_js__WEBPACK_IMPORTED_MODULE_1__["DESCRIPTIONS_CONDENSED"], `.`);
   return Object(_components_utils_js__WEBPACK_IMPORTED_MODULE_0__["returnRandomArray"])(descriptions, 0, descriptions.length);
 };
-
-const OFFER_PRICE_MIN = 5;
-const OFFER_PRICE_MAX = 15;
 
 const generatePricesForOffers = (names) => {
   const prices = [];
   names.forEach(() => {
-    prices.push(Object(_components_utils_js__WEBPACK_IMPORTED_MODULE_0__["getRandomIntegerInRange"])(OFFER_PRICE_MIN, OFFER_PRICE_MAX));
+    prices.push(Object(_components_utils_js__WEBPACK_IMPORTED_MODULE_0__["getRandomIntegerInRange"])(_components_constants_js__WEBPACK_IMPORTED_MODULE_1__["OfferPrice"].MIN, _components_constants_js__WEBPACK_IMPORTED_MODULE_1__["OfferPrice"].MAX));
   });
   return prices;
 };
 
 const generateOffers = () => {
-  return types.map((type) => {
-    const names = Object(_components_utils_js__WEBPACK_IMPORTED_MODULE_0__["returnRandomArray"])(offerNames, 0, offerNames.length);
+  return _components_constants_js__WEBPACK_IMPORTED_MODULE_1__["TYPES"].map((type) => {
+    const names = Object(_components_utils_js__WEBPACK_IMPORTED_MODULE_0__["returnRandomArray"])(_components_constants_js__WEBPACK_IMPORTED_MODULE_1__["OFFER_NAMES"], 0, _components_constants_js__WEBPACK_IMPORTED_MODULE_1__["NUMBER_OF_OFFERS"]);
     const prices = generatePricesForOffers(names);
     return {type, names, prices};
   });
 };
 
-const returnOfferMarkUp = (name, price) => {
-  return (`<li class="event__offer">
-          <span class="event__offer-title">${name}</span>
-          &plus;
-          &euro;&nbsp;<span class="event__offer-price">${price}</span>
-         </li>`);
-};
-
 const getOffer = () => Object(_components_utils_js__WEBPACK_IMPORTED_MODULE_0__["returnRandomElementInArray"])(generateOffers());
-
-const returnOffersMarkUp = () => {
-  let {names, prices} = getOffer();
-  const offersMarkUp = [];
-  for (let i = 0; i < names.length; i++) {
-    offersMarkUp.push(returnOfferMarkUp(names[i], prices[i]));
-  }
-  return (`<ul class="event__selected-offers">${offersMarkUp.join(`\n`)}</ul>`);
-};
 
 const addArticleToEventType = () => {
   const LAST_INDEX_OF_TRANSPORT_EVENT = 6;
   let eventType = getOffer().type;
-  if (types.indexOf(eventType) > LAST_INDEX_OF_TRANSPORT_EVENT) {
+  if (_components_constants_js__WEBPACK_IMPORTED_MODULE_1__["TYPES"].indexOf(eventType) > LAST_INDEX_OF_TRANSPORT_EVENT) {
     eventType = eventType + ` in`;
   } else {
     eventType = eventType + ` to`;
@@ -739,29 +861,29 @@ const addArticleToEventType = () => {
   return eventType;
 };
 
-const EVENT_PRICE_MIN = 0;
-const EVENT_PRICE_MAX = 60;
-const eventStartDates = generateEventStartDates();
+let eventStartDates = generateEventStartDates();
 
 const generateTripEvent = () => {
   return {
     type: addArticleToEventType(),
-    city: Object(_components_utils_js__WEBPACK_IMPORTED_MODULE_0__["returnRandomElementInArray"])(cities),
+    city: Object(_components_utils_js__WEBPACK_IMPORTED_MODULE_0__["returnRandomElementInArray"])(_components_constants_js__WEBPACK_IMPORTED_MODULE_1__["CITIES"]),
     destination: {
       description: returnRandomDescription(),
       photo: `http://picsum.photos/248/152?r=${Math.random()}`
     },
     startDates: eventStartDates,
     endDates: generateEventEndDates(eventStartDates),
-    offers: returnOffersMarkUp(),
-    price: Object(_components_utils_js__WEBPACK_IMPORTED_MODULE_0__["getRandomIntegerInRange"])(EVENT_PRICE_MIN, EVENT_PRICE_MAX),
+    offers: getOffer(),
+    price: Object(_components_utils_js__WEBPACK_IMPORTED_MODULE_0__["getRandomIntegerInRange"])(_components_constants_js__WEBPACK_IMPORTED_MODULE_1__["EventPrice"].MIN, _components_constants_js__WEBPACK_IMPORTED_MODULE_1__["EventPrice"].MAX),
   };
 };
 
 const generateTripEvents = (count) => {
   return new Array(count).
   fill(``).
-  map(generateTripEvent);
+  map(generateTripEvent).
+  sort((a, b) => a.startDates.startMonth - b.startDates.startMonth).
+  sort((a, b) => a.startDates.startDay - b.startDates.startDay);
 };
 
 

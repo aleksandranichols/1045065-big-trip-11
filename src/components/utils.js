@@ -1,6 +1,6 @@
 export const getRandomIntegerInRange = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
-export const splitAString = (string, delimeter) => string.split(delimeter);
+export const splitAString = (string, delimiter) => string.split(delimiter);
 
 export const returnRandomArray = (array, min, max) => {
   const random = [];

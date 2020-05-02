@@ -1,4 +1,6 @@
 import {splitAString} from './utils.js';
+import {DAYS_NAME, HOURS_NAME, MINUTES_NAME} from './constants.js';
+import {returnEventOffers} from './event-offers.js';
 
 export const returnEvent = (tripEvent) => {
   let {startMinutes, startHours, startDay, startMonth, startYear} = tripEvent.startDates;
@@ -19,9 +21,6 @@ export const returnEvent = (tripEvent) => {
   };
 
   const generateEventDuration = () => {
-    const HOURS_NAME = `H `;
-    const MINUTES_NAME = `M `;
-    const DAYS_NAME = `D `;
     const durationDays = generateDuration(endDay, startDay, DAYS_NAME);
     const durationHours = generateDuration(endHours, startHours, HOURS_NAME);
     const durationMinutes = generateDuration(endMinutes, startMinutes, MINUTES_NAME);
@@ -56,7 +55,7 @@ export const returnEvent = (tripEvent) => {
 
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
-    ${tripEvent.offers}
+    ${returnEventOffers(tripEvent.offers)}
     </ul>
 
     <button class="event__rollup-btn" type="button">
