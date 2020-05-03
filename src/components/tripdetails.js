@@ -1,9 +1,16 @@
-export const returnTripDetails = () => (`<ul class="trip-days">
-  <li class="trip-days__item  day">
+import {MONTH_NAMES} from './constants.js';
+
+export const returnTripDetails = (tripEvent, counter) => {
+  let {startDay, startMonth, startYear} = tripEvent.startDates;
+  const startMonthShort = MONTH_NAMES[startMonth - 1];
+
+  return `<li class="trip-days__item  day">
     <div class="day__info">
-      <span class="day__counter">1</span>
-      <time class="day__date" datetime="2019-03-18">MAR 18</time>
+      <span class="day__counter">${counter}</span>
+      <time class="day__date" datetime="${startYear}-${startMonth}-${startDay}">${startMonthShort} ${startDay}</time>
     </div>
 
     <ul class="trip-events__list">
-    </ul>`);
+    </ul>
+  </li>`;
+};

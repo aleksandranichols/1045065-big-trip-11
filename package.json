@@ -12,6 +12,8 @@
   "devDependencies": {
     "eslint": "6.1.0",
     "eslint-config-htmlacademy": "0.5.2",
+    "eslint-plugin-jsdoc": "24.0.0",
+    "eslint-plugin-node": "11.1.0",
     "webpack": "4.42.1",
     "webpack-cli": "3.3.11",
     "webpack-dev-server": "3.10.3"
