@@ -1,6 +1,6 @@
-import {splitAString} from './utils.js';
+import {splitAString, createElement} from './utils.js';
 
-export const returnEditEvent = (tripEvent) => {
+const returnEditEvent = (tripEvent) => {
 
   let {startMinutes, startHours, startDay, startMonth, startYear} = tripEvent.startDates;
   let {endMinutes, endHours, endDay, endMonth} = tripEvent.endDates;
@@ -8,7 +8,7 @@ export const returnEditEvent = (tripEvent) => {
   const eventIcon = splitAString(tripEvent.type.toLowerCase(), ` `);
 
   return `<li class="trip-events__item">
-  <form class="event  event--edit" action="#" method="post">
+  <form class="event  event--edit" action="# method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -194,3 +194,24 @@ export const returnEditEvent = (tripEvent) => {
   </form>
 </li>`;
 };
+
+export default class EditTripEvent {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate(tripEvent) {
+    return returnEditEvent(tripEvent);
+  }
+
+  getElement(tripEvent) {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate(tripEvent));
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

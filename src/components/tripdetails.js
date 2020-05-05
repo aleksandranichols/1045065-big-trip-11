@@ -1,4 +1,5 @@
 import {MONTH_NAMES} from './constants.js';
+import {createElement} from './utils.js';
 
 export const returnTripDetails = (tripEvent, counter) => {
   let {startDay, startMonth, startYear} = tripEvent.startDates;
@@ -14,3 +15,24 @@ export const returnTripDetails = (tripEvent, counter) => {
     </ul>
   </li>`;
 };
+
+export default class TripDetails {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate(tripEvent, counter) {
+    return returnTripDetails(tripEvent, counter);
+  }
+
+  getElement(tripEvent, counter) {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate(tripEvent, counter));
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
