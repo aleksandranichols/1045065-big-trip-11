@@ -12,7 +12,7 @@ export const TWO_DAYS_IN_MINUTES = 2880;
 export const ONE_DAY_IN_MINUTES = 1440;
 export const HOURS_IN_DAY = 24;
 export const MINUTES_IN_HOUR = 60;
-export const NUMBER_OF_EVENTS = 15;
+export const NUMBER_OF_EVENTS = 20;
 export const NUMBER_OF_OFFERS = 3;
 
 export const OfferPrice = {

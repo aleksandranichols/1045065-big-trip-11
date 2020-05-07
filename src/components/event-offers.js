@@ -9,8 +9,8 @@ const returnOfferMarkUp = (name, price) => {
 export const returnEventOffers = (offers) => {
   let {names, prices} = offers;
   const offersMarkUp = [];
-  for (let i = 0; i < names.length; i++) {
-    offersMarkUp.push(returnOfferMarkUp(names[i], prices[i]));
-  }
+  names.forEach((name, index) => {
+    offersMarkUp.push(returnOfferMarkUp(name, prices[index]));
+  });
   return (`<ul class="event__selected-offers">${offersMarkUp.join(`\n`)}</ul>`);
 };

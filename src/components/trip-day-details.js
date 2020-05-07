@@ -1,7 +1,7 @@
 import {MONTH_NAMES} from './constants.js';
 import {createElement} from './utils.js';
 
-export const returnTripDetails = (tripEvent, counter) => {
+export const returnTripDayDetails = (tripEvent, counter) => {
   let {startDay, startMonth, startYear} = tripEvent.startDates;
   const startMonthShort = MONTH_NAMES[startMonth - 1];
 
@@ -16,13 +16,13 @@ export const returnTripDetails = (tripEvent, counter) => {
   </li>`;
 };
 
-export default class TripDetails {
+export default class TripDayDetails {
   constructor() {
     this._element = null;
   }
 
   getTemplate(tripEvent, counter) {
-    return returnTripDetails(tripEvent, counter);
+    return returnTripDayDetails(tripEvent, counter);
   }
 
   getElement(tripEvent, counter) {

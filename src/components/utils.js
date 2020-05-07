@@ -30,8 +30,13 @@ export const renderElement = (place, element, container) => {
     case Positions.AFTERBEGIN:
       container.prepend(element);
       break;
+    case Positions.AFTEREND:
+      container.parentNode.insertBefore(element, container.nextSibling);
+      break;
     case Positions.BEFOREEND:
       container.append(element);
       break;
+    default:
+      throw new Error(`Switch case doesn't exist at renderElement`);
   }
 };
