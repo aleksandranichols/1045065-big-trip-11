@@ -1,8 +1,8 @@
-import {splitAString} from './utils.js';
+import {splitAString, createElement} from './utils.js';
 import {DAYS_NAME, HOURS_NAME, MINUTES_NAME} from './constants.js';
 import {returnEventOffers} from './event-offers.js';
 
-export const returnEvent = (tripEvent) => {
+const returnEvent = (tripEvent) => {
   let {startMinutes, startHours, startDay, startMonth, startYear} = tripEvent.startDates;
   let {endMinutes, endHours, endDay, endMonth} = tripEvent.endDates;
 
@@ -64,3 +64,24 @@ export const returnEvent = (tripEvent) => {
   </div>
 </li>`;
 };
+
+export default class TripEvent {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate(tripEvent) {
+    return returnEvent(tripEvent);
+  }
+
+  getElement(tripEvent) {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate(tripEvent));
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
