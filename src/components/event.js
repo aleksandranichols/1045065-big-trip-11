@@ -1,6 +1,7 @@
-import {splitAString, createElement} from './utils.js';
-import {DAYS_NAME, HOURS_NAME, MINUTES_NAME} from './constants.js';
+import {splitAString} from '../utils/general.js';
+import {DAYS_NAME, HOURS_NAME, MINUTES_NAME} from '../utils/constants.js';
 import {returnEventOffers} from './event-offers.js';
+import AllMighty from './allmighty.js';
 
 const returnEvent = (tripEvent) => {
   let {startMinutes, startHours, startDay, startMonth, startYear} = tripEvent.startDates;
@@ -65,23 +66,17 @@ const returnEvent = (tripEvent) => {
 </li>`;
 };
 
-export default class TripEvent {
-  constructor() {
-    this._element = null;
+export default class TripEvent extends AllMighty {
+  constructor(data) {
+    super();
+    this._data = data;
   }
 
-  getTemplate(tripEvent) {
-    return returnEvent(tripEvent);
+  getTemplate() {
+    return returnEvent(this._data);
   }
 
-  getElement(tripEvent) {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate(tripEvent));
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setclickHandler(handler) {
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
   }
 }

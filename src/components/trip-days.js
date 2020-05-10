@@ -1,27 +1,12 @@
-import {createElement} from './utils.js';
+import AllMighty from './allmighty.js';
 
 const returnTripList = () =>
   (`<ul class="trip-days">
   </ul>`
   );
 
-export default class TripList {
-  constructor() {
-    this._element = null;
-  }
-
+export default class TripList extends AllMighty {
   getTemplate() {
     return returnTripList();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
