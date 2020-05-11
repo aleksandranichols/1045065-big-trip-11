@@ -2,8 +2,16 @@ import {MONTH_NAMES} from '../utils/constants.js';
 import AllMighty from './allmighty.js';
 
 export const returnTripDayDetails = (tripEvent, counter) => {
-  let {startDay, startMonth, startYear} = tripEvent.startDates;
-  const startMonthShort = MONTH_NAMES[startMonth - 1];
+  let startDay = ``;
+  let startMonth = ``;
+  let startYear = ``;
+  let startMonthShort = ``;
+  if (tripEvent !== null) {
+    startDay = tripEvent.startDates.startDay;
+    startMonth = tripEvent.startDates.startMonth;
+    startYear = tripEvent.startDates.startYear;
+    startMonthShort = MONTH_NAMES[startMonth - 1];
+  }
 
   return `<li class="trip-days__item  day">
     <div class="day__info">

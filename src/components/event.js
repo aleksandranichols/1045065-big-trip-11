@@ -76,7 +76,7 @@ export default class TripEvent extends AllMighty {
     return returnEvent(this._data);
   }
 
-  setclickHandler(handler) {
+  setClickHandler(handler) {
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
   }
 }

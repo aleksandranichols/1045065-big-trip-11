@@ -1,4 +1,4 @@
-import {Positions} from './constants.js';
+import {Position} from './constants.js';
 
 export const createDOMElement = (template) => {
   const div = document.createElement(`div`);
@@ -8,13 +8,13 @@ export const createDOMElement = (template) => {
 
 export const renderComponent = (place, component, container) => {
   switch (place) {
-    case Positions.AFTERBEGIN:
+    case Position.AFTERBEGIN:
       container.prepend(component.getElement());
       break;
-    case Positions.AFTEREND:
+    case Position.AFTEREND:
       container.parentNode.insertBefore(component.getElement(), container.nextSibling);
       break;
-    case Positions.BEFOREEND:
+    case Position.BEFOREEND:
       container.append(component.getElement());
       break;
     default:
