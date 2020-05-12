@@ -74,7 +74,6 @@ export default class TripController {
   }
 
   _renderTripDays() {
-    debugger;
     let tripDaysList = this._container.querySelector(`.trip-days`);
     tripDaysList.innerHTML = ``;
     let listCounter = 1;
