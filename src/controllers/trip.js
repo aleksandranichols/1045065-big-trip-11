@@ -15,8 +15,9 @@ const toggleComponents = (oldComponent, newComponent) => {
 
 
 export default class TripController {
-  constructor(eventMocks) {
+  constructor(container, eventMocks) {
     this._sorting = new Sorting();
+    this._container = container;
     this._eventMocks = eventMocks;
   }
 
@@ -26,14 +27,16 @@ export default class TripController {
     switch (sortType) {
       case SortType.DEFAULT:
         this._renderTripDays();
+        sortedEventMocks = ``;
         break;
       case SortType.PRICE:
         sortedEventMocks.sort((a, b) => b.price - a.price);
         break;
       case SortType.TIME:
         sortedEventMocks.
-      sort((a, b) => a.startDates.startMonth - b.startDates.startMonth).
-      sort((a, b) => a.startDates.startDay - b.startDates.startDay);
+      sort((a, b) => b.startDates.startYear - a.startDates.startYear).
+      sort((a, b) => b.startDates.startMonth - a.startDates.startMonth).
+      sort((a, b) => b.startDates.startDay - a.startDates.startDay);
         break;
       default:
         throw new Error(`Switch case doesn't exist at sortTripEvents`);
@@ -42,17 +45,37 @@ export default class TripController {
   }
 
   _renderTripDetails() {
-    const tripMain = document.querySelector(`.trip-main`);
-    const tripEvents = document.querySelector(`.trip-events`);
+    const tripMain = this._container.querySelector(`.trip-main`);
+    const tripEvents = this._container.querySelector(`.trip-events`);
     renderComponent(Position.BEFOREEND, this._sorting, tripEvents);
     renderComponent(Position.BEFOREEND, new TripList(), tripEvents);
     renderComponent(Position.AFTERBEGIN, new TripInfo(), tripMain);
-    const tripInfo = document.querySelector(`.trip-info`);
+    const tripInfo = this._container.querySelector(`.trip-info`);
     renderComponent(Position.BEFOREEND, new TripCost(), tripInfo);
   }
 
+  _addEventHandlers(tripEvent, editTripEvent) {
+    const onEscKey = (evt) => {
+      if (evt.key === `Esc` || evt.key === `Escape`) {
+        toggleComponents(editTripEvent, tripEvent);
+        document.removeEventListener(`keydown`, onEscKey);
+      }
+    };
+
+    tripEvent.setClickHandler(() => {
+      toggleComponents(tripEvent, editTripEvent);
+      document.addEventListener(`keydown`, onEscKey);
+    });
+
+    editTripEvent.setEventHandler((evt) => {
+      evt.preventDefault();
+      toggleComponents(editTripEvent, tripEvent);
+    });
+  }
+
   _renderTripDays() {
-    let tripDaysList = document.querySelector(`.trip-days`);
+    debugger;
+    let tripDaysList = this._container.querySelector(`.trip-days`);
     tripDaysList.innerHTML = ``;
     let listCounter = 1;
     const days = [];
@@ -61,7 +84,7 @@ export default class TripController {
       const tripEvent = new TripEvent(eventMock);
       const editTripEvent = new EditTripEvent(eventMock);
       const currentEventDay = this._eventMocks[index].startDates.startDay;
-      let tripDay = document.querySelector(`.day-${listCounter - 1}`);
+      let tripDay = this._container.querySelector(`.day-${listCounter - 1}`);
 
       if (tripDay !== null && days.some((day) => day.currentEventDay === currentEventDay)) {
         const tripDayList = tripDay.querySelector(`.trip-events__list`);
@@ -76,22 +99,7 @@ export default class TripController {
         listCounter++;
       }
 
-      const onEscKey = (evt) => {
-        if (evt.key === `Esc` || evt.key === `Escape`) {
-          toggleComponents(editTripEvent, tripEvent);
-          document.removeEventListener(`keydown`, onEscKey);
-        }
-      };
-
-      tripEvent.setClickHandler(() => {
-        toggleComponents(tripEvent, editTripEvent);
-        document.addEventListener(`keydown`, onEscKey);
-      });
-
-      editTripEvent.setEventHandler((evt) => {
-        evt.preventDefault();
-        toggleComponents(editTripEvent, tripEvent);
-      });
+      this._addEventHandlers(tripEvent, editTripEvent);
     });
   }
 
@@ -99,21 +107,23 @@ export default class TripController {
     this._renderTripDetails();
     this._renderTripDays();
 
-    // testing
-    const x = (evt) => {
-      let tripDaysList = document.querySelector(`.trip-days`);
+    const sortTripEventsByType = (evt) => {
+      let tripDaysList = this._container.querySelector(`.trip-days`);
       tripDaysList.innerHTML = ``;
-      const sortedTripEvents = this._sortTripEvents(evt, this._eventMocks);
+      const sortedTripEventsMocks = this._sortTripEvents(evt, this._eventMocks);
       const tripDay = new TripDayDetails(null, 0);
       tripDay.getElement().querySelector(`div`).innerHTML = ``;
       renderComponent(Position.BEFOREEND, tripDay, tripDaysList);
       const tripDayList = tripDay.getElement().querySelector(`.trip-events__list`);
-      sortedTripEvents.forEach((sortedEvent) => {
-        renderComponent(Position.BEFOREEND, new TripEvent(sortedEvent), tripDayList);
+      sortedTripEventsMocks.forEach((sortedEventMock) => {
+        const sortedTripEvent = new TripEvent(sortedEventMock);
+        const sortedTripEditEvent = new EditTripEvent(sortedEventMock);
+        renderComponent(Position.BEFOREEND, sortedTripEvent, tripDayList);
+        this._addEventHandlers(sortedTripEvent, sortedTripEditEvent);
       });
-      this._sorting.setClickHandler(x);
     };
-    this._sorting.setClickHandler(x);
+
+    this._sorting.setClickHandler(sortTripEventsByType);
 
   }
 }

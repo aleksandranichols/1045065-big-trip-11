@@ -13,13 +13,14 @@ renderComponent(Position.AFTEREND, new Navigation(), tripControlsMenuHeading);
 renderComponent(Position.AFTEREND, new Filters(), tripControlsFiltersHeading);
 
 const tripList = document.querySelector(`.trip-events`);
+const body = document.querySelector(`.page-body`);
 
 const renderATrip = (numberOfEvents) => {
   if (numberOfEvents === 0) {
     renderComponent(Position.BEFOREEND, new NoTripEvents(), tripList);
   } else {
     const tripEvents = generateTripEventMocks(numberOfEvents);
-    new TripController(tripEvents).render();
+    new TripController(body, tripEvents).render();
   }
 };
 

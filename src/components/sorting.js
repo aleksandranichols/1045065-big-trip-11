@@ -45,13 +45,14 @@ export default class Sorting extends AllMighty {
   }
 
   setClickHandler(handler) {
-    this.getElement().querySelectorAll(`.trip-sort__btn`).forEach(function(sortButton) {
+    let currentSortType = this._currentSortType;
+    this.getElement().querySelectorAll(`.trip-sort__btn`).forEach((sortButton) => {
       sortButton.addEventListener(`click`, function (evt) {
-        if (evt.target.dataset.sortType !== this._currentSortType) {
-          this._currentSortType = evt.target.dataset.sortType;
-          handler(this._currentSortType);
+        if (evt.target.dataset.sortType !== currentSortType) {
+          currentSortType = evt.target.dataset.sortType;
+          handler(currentSortType);
         }
       });
-    });
+    }, currentSortType);
   }
 }
