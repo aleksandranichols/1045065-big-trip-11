@@ -25,8 +25,14 @@ export const EventPrice = {
   MAX: 60
 };
 
-export const Positions = {
+export const Position = {
   AFTERBEGIN: `afterbegin`,
   AFTEREND: `afterend`,
   BEFOREEND: `beforeend`
+};
+
+export const SortType = {
+  DEFAULT: `default`,
+  PRICE: `price`,
+  TIME: `time`
 };

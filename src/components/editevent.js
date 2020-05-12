@@ -1,4 +1,5 @@
-import {splitAString, createElement} from './utils.js';
+import {splitAString} from '../utils/general.js';
+import AllMighty from './allmighty.js';
 
 const returnEditEvent = (tripEvent) => {
 
@@ -195,23 +196,16 @@ const returnEditEvent = (tripEvent) => {
 </li>`;
 };
 
-export default class EditTripEvent {
-  constructor() {
-    this._element = null;
+export default class EditTripEvent extends AllMighty {
+  constructor(tripEvent) {
+    super();
+    this._tripEvent = tripEvent;
+  }
+  getTemplate() {
+    return returnEditEvent(this._tripEvent);
   }
 
-  getTemplate(tripEvent) {
-    return returnEditEvent(tripEvent);
-  }
-
-  getElement(tripEvent) {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate(tripEvent));
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setEventHandler(handler) {
+    this.getElement().addEventListener(`submit`, handler);
   }
 }

@@ -1,5 +1,5 @@
-import {getRandomIntegerInRange, splitAString, returnRandomArray, returnRandomElementInArray} from '../components/utils.js';
-import {TYPES, CITIES, DESCRIPTIONS_CONDENSED, OFFER_NAMES, NUMBER_OF_OFFERS, TWO_DAYS_IN_MINUTES, ONE_DAY_IN_MINUTES, HOURS_IN_DAY, MINUTES_IN_HOUR, OfferPrice, EventPrice} from '../components/constants.js';
+import {getRandomIntegerInRange, splitAString, returnRandomArray, returnRandomElementInArray} from '../utils/general.js';
+import {TYPES, CITIES, DESCRIPTIONS_CONDENSED, OFFER_NAMES, NUMBER_OF_OFFERS, TWO_DAYS_IN_MINUTES, ONE_DAY_IN_MINUTES, HOURS_IN_DAY, MINUTES_IN_HOUR, OfferPrice, EventPrice} from '../utils/constants.js';
 
 const eventTimeInMinutes = getRandomIntegerInRange(0, TWO_DAYS_IN_MINUTES);
 
@@ -88,7 +88,7 @@ const generateTripEvent = () => {
   };
 };
 
-export const generateTripEvents = (count) => {
+export const generateTripEventMocks = (count) => {
   return new Array(count).
   fill(``).
   map(generateTripEvent).
