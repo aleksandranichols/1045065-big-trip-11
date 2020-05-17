@@ -4,8 +4,8 @@ import {returnEventOffers} from './event-offers.js';
 import AllMighty from './allmighty.js';
 
 const returnEvent = (tripEvent) => {
-  let {startMinutes, startHours, startDay, startMonth, startYear} = tripEvent.startDates;
-  let {endMinutes, endHours, endDay, endMonth} = tripEvent.endDates;
+  let {startMinutes, startHours, startDay, startMonth, startYear} = tripEvent.date_from;
+  let {endMinutes, endHours, endDay, endMonth} = tripEvent.date_to;
 
   const generateDuration = (endDuration, startDuration, durationName) => {
     let duration;
@@ -51,7 +51,7 @@ const returnEvent = (tripEvent) => {
     </div>
 
     <p class="event__price">
-      &euro;&nbsp;<span class="event__price-value">${tripEvent.price}</span>
+      &euro;&nbsp;<span class="event__price-value">${tripEvent.base_price}</span>
     </p>
 
     <h4 class="visually-hidden">Offers:</h4>

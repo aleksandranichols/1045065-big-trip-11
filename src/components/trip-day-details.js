@@ -7,9 +7,9 @@ export const returnTripDayDetails = (tripEvent, counter) => {
   let startYear = ``;
   let startMonthShort = ``;
   if (tripEvent !== null) {
-    startDay = tripEvent.startDates.startDay;
-    startMonth = tripEvent.startDates.startMonth;
-    startYear = tripEvent.startDates.startYear;
+    startDay = tripEvent.date_from.startDay;
+    startMonth = tripEvent.date_from.startMonth;
+    startYear = tripEvent.date_from.startYear;
     startMonthShort = MONTH_NAMES[startMonth - 1];
   }
 

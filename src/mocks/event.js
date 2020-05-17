@@ -1,5 +1,6 @@
 import {getRandomIntegerInRange, splitAString, returnRandomArray, returnRandomElementInArray} from '../utils/general.js';
-import {TYPES, CITIES, DESCRIPTIONS_CONDENSED, OFFER_NAMES, NUMBER_OF_OFFERS, TWO_DAYS_IN_MINUTES, ONE_DAY_IN_MINUTES, HOURS_IN_DAY, MINUTES_IN_HOUR, OfferPrice, EventPrice} from '../utils/constants.js';
+import {addArticleToEventType} from '../utils/event-helpers.js';
+import {TYPES, CITIES, DESCRIPTIONS_CONDENSED, OFFER_TITLES, NUMBER_OF_OFFERS, TWO_DAYS_IN_MINUTES, ONE_DAY_IN_MINUTES, HOURS_IN_DAY, MINUTES_IN_HOUR, OfferPrice, EventPrice} from '../utils/constants.js';
 
 const eventTimeInMinutes = getRandomIntegerInRange(0, TWO_DAYS_IN_MINUTES);
 
@@ -15,8 +16,8 @@ const generateEventStartDates = () => {
   return {startMinutes, startHours, startDay, startMonth, startYear};
 };
 
-const generateEventEndDates = (startDates) => {
-  let {startDay, startMonth} = startDates;
+const generateEventEndDates = (date_from) => {
+  let {startDay, startMonth} = date_from;
   let endMonth;
   let endDay;
   let endHours;
@@ -53,38 +54,37 @@ const generatePricesForOffers = (names) => {
 
 const generateOffers = () => {
   return TYPES.map((type) => {
-    const names = returnRandomArray(OFFER_NAMES, 0, NUMBER_OF_OFFERS);
-    const prices = generatePricesForOffers(names);
-    return {type, names, prices};
+    const titles = returnRandomArray(OFFER_TITLES, 0, NUMBER_OF_OFFERS);
+    const prices = generatePricesForOffers(titles);
+    return {type, titles, prices};
   });
 };
 
-const getOffer = () => returnRandomElementInArray(generateOffers());
-
-const addArticleToEventType = () => {
-  const LAST_INDEX_OF_TRANSPORT_EVENT = 6;
-  let eventType = getOffer().type;
-  if (TYPES.indexOf(eventType) > LAST_INDEX_OF_TRANSPORT_EVENT) {
-    eventType = eventType + ` in`;
-  } else {
-    eventType = eventType + ` to`;
-  }
-  return eventType;
-};
+export const existingOffers = generateOffers();
 
 const generateTripEvent = () => {
+  const randomCity = returnRandomElementInArray(CITIES);
+  const randomOffer = returnRandomElementInArray(existingOffers);
   let eventStartDates = generateEventStartDates();
   return {
-    type: addArticleToEventType(),
-    city: returnRandomElementInArray(CITIES),
+    base_price: getRandomIntegerInRange(EventPrice.MIN, EventPrice.MAX),
+    date_from: eventStartDates,
+    date_to: generateEventEndDates(eventStartDates),
     destination: {
       description: returnRandomDescription(),
-      photo: `http://picsum.photos/248/152?r=${Math.random()}`
+      name: randomCity,
+      pictures: [
+        {
+          src: `http://picsum.photos/248/152?r=${Math.random()}`,
+          description: `Destination picture description`,
+        }
+      ]
     },
-    startDates: eventStartDates,
-    endDates: generateEventEndDates(eventStartDates),
-    offers: getOffer(),
-    price: getRandomIntegerInRange(EventPrice.MIN, EventPrice.MAX),
+    id: 0,
+    is_favorite: false,
+    offers: randomOffer,
+    type: addArticleToEventType(randomOffer.type, TYPES),
+    city: randomCity,
   };
 };
 
@@ -92,6 +92,6 @@ export const generateTripEventMocks = (count) => {
   return new Array(count).
   fill(``).
   map(generateTripEvent).
-  sort((a, b) => a.startDates.startMonth - b.startDates.startMonth).
-  sort((a, b) => a.startDates.startDay - b.startDates.startDay);
+  sort((a, b) => a.date_from.startMonth - b.date_from.startMonth).
+  sort((a, b) => a.date_from.startDay - b.date_from.startDay);
 };

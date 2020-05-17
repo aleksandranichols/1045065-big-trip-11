@@ -1,12 +1,16 @@
+import AllMightySmarty from './allmightysmarty.js';
 import {splitAString} from '../utils/general.js';
-import AllMighty from './allmighty.js';
+import {addArticleToEventType} from '../utils/event-helpers';
+import {TYPES} from '../utils/constants';
+import {existingOffers} from '../mocks/event.js';
+import {returnEventOffersOnEdit} from './event-offers.js';
 
 const returnEditEvent = (tripEvent) => {
-
-  let {startMinutes, startHours, startDay, startMonth, startYear} = tripEvent.startDates;
-  let {endMinutes, endHours, endDay, endMonth} = tripEvent.endDates;
-  let {description, photo} = tripEvent.destination;
+  let {startMinutes, startHours, startDay, startMonth, startYear} = tripEvent.date_from;
+  let {endMinutes, endHours, endDay, endMonth} = tripEvent.date_to;
+  let {description, pictures, name} = tripEvent.destination;
   const eventIcon = splitAString(tripEvent.type.toLowerCase(), ` `);
+  const isFavorite = tripEvent.is_favorite === false ? `` : `checked`;
 
   return `<li class="trip-events__item">
   <form class="event  event--edit" action="#" method="post">
@@ -108,13 +112,13 @@ const returnEditEvent = (tripEvent) => {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${tripEvent.price}">
+        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${tripEvent.base_price}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
       <button class="event__reset-btn" type="reset">Delete</button>
 
-      <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked>
+      <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite}>
       <label class="event__favorite-btn" for="event-favorite-1">
         <span class="visually-hidden">Add to favorite</span>
         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -130,64 +134,15 @@ const returnEditEvent = (tripEvent) => {
     <section class="event__details">
       <section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-        <div class="event__available-offers">
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-            <label class="event__offer-label" for="event-offer-luggage-1">
-              <span class="event__offer-title">Add luggage</span>
-              &plus;
-              &euro;&nbsp;<span class="event__offer-price">30</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
-            <label class="event__offer-label" for="event-offer-comfort-1">
-              <span class="event__offer-title">Switch to comfort class</span>
-              &plus;
-              &euro;&nbsp;<span class="event__offer-price">100</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal-1" type="checkbox" name="event-offer-meal">
-            <label class="event__offer-label" for="event-offer-meal-1">
-              <span class="event__offer-title">Add meal</span>
-              &plus;
-              &euro;&nbsp;<span class="event__offer-price">15</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
-            <label class="event__offer-label" for="event-offer-seats-1">
-              <span class="event__offer-title">Choose seats</span>
-              &plus;
-              &euro;&nbsp;<span class="event__offer-price">5</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
-            <label class="event__offer-label" for="event-offer-train-1">
-              <span class="event__offer-title">Travel by train</span>
-              &plus;
-              &euro;&nbsp;<span class="event__offer-price">40</span>
-            </label>
-          </div>
-        </div>
+        ${returnEventOffersOnEdit(tripEvent.offers)}
       </section>
       <section class="event__section  event__section--destination">
-        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+        <h3 class="event__section-title  event__section-title--destination">${name}</h3>
         <p class="event__destination-description">${description}</p>
         <div class="event__photos-container">
           <div class="event__photos-tape">
-            <img class="event__photo" src="${photo}" alt="Event photo">
-            <img class="event__photo" src="${photo}" alt="Event photo">
-            <img class="event__photo" src="${photo}" alt="Event photo">
-            <img class="event__photo" src="${photo}" alt="Event photo">
-            <img class="event__photo" src="${photo}" alt="Event photo">
+            <img class="event__photo" src="${pictures[0].src}" alt="${pictures[0].description}">
+            <img class="event__photo" src="${pictures[0].src}" alt="${pictures[0].description}">
           </div>
         </div>
       </section>
@@ -196,16 +151,52 @@ const returnEditEvent = (tripEvent) => {
 </li>`;
 };
 
-export default class EditTripEvent extends AllMighty {
+export default class EditTripEvent extends AllMightySmarty {
   constructor(tripEvent) {
     super();
     this._tripEvent = tripEvent;
+    this._changeType();
+    this._changeDestination();
   }
+
   getTemplate() {
     return returnEditEvent(this._tripEvent);
   }
 
-  setEventHandler(handler) {
+  recoveryListeners() {
+    this.setSubmitHandler();
+    this.setClickOnFavHandler();
+    this._changeType();
+    this._changeDestination();
+  }
+
+  setSubmitHandler(handler) {
     this.getElement().addEventListener(`submit`, handler);
   }
+
+  setClickOnFavHandler(handler) {
+    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, handler);
+  }
+
+  _changeType() {
+    const allEventsLabels = this.getElement().querySelectorAll(`.event__type-label`);
+    allEventsLabels.forEach((label) => label.addEventListener(`click`, () => {
+      this._tripEvent.type = addArticleToEventType(label.textContent, TYPES);
+      const currentOfferIndex = existingOffers.findIndex((offer) => offer.type === label.textContent);
+      this._tripEvent.offers = existingOffers[currentOfferIndex];
+      this.rerender();
+      this.recoveryListeners();
+    }));
+  }
+
+  _changeDestination() {
+    const destinationInput = this.getElement().querySelector(`.event__input--destination`);
+    destinationInput.addEventListener(`change`, () => {
+      this._tripEvent.city = destinationInput.value;
+      this._tripEvent.destination.name = destinationInput.value;
+      this.rerender();
+      this.recoveryListeners();
+    });
+  }
+
 }
