@@ -1,12 +1,13 @@
 import AllMighty from './allmighty.js';
+import EventOffers from './event-offers.js';
 import {splitAString} from '../utils/general.js';
 import {returnEventDates} from '../utils/event-helpers.js';
 import {returnEventOffers} from './event-offers.js';
 
 const returnEvent = (tripEvent) => {
   let {startDateWithDash, endDateWithDash, startTime, endTime, duration} = returnEventDates(tripEvent.startDate, tripEvent.endDate);
-
   const eventIcon = splitAString(tripEvent.type.toLowerCase(), ` `);
+  const eventOffers = new EventOffers(tripEvent.offers).getEventTemplate();
 
   return `<li class="trip-events__item">
   <div class="event">
@@ -30,7 +31,7 @@ const returnEvent = (tripEvent) => {
 
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
-    ${returnEventOffers(tripEvent.offers)}
+    ${eventOffers}
     </ul>
 
     <button class="event__rollup-btn" type="button">

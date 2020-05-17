@@ -1,3 +1,4 @@
+import AllMighty from './allmighty.js';
 import {OFFER_NAMES} from '../utils/constants.js';
 
 const returnOfferMarkUp = (title, price) => {
@@ -19,7 +20,7 @@ const returnOfferMarkUpOnEdit = (title, name, price) => {
   </div>`);
 };
 
-export const returnEventOffers = (offers, container) => {
+const returnEventOffers = (offers) => {
   let {titles, prices} = offers;
   const offersMarkUp = [];
   titles.forEach((title, index) => {
@@ -29,7 +30,7 @@ export const returnEventOffers = (offers, container) => {
 };
 
 
-export const returnEventOffersOnEdit = (offers) => {
+const returnEventOffersOnEdit = (offers) => {
   let {titles, prices} = offers;
   const offersMarkUp = [];
   titles.forEach((title, index) => {
@@ -37,3 +38,17 @@ export const returnEventOffersOnEdit = (offers) => {
   });
   return (`<div class="event__available-offers">${offersMarkUp.join(`\n`)}</div>`);
 };
+
+export default class EventOffers extends AllMighty {
+  constructor(offers) {
+    super();
+    this._offers = offers;
+  }
+  getEventTemplate() {
+    return returnEventOffers(this._offers);
+  }
+
+  getEventTemplateOnEdit() {
+    return returnEventOffersOnEdit(this._offers);
+  }
+}

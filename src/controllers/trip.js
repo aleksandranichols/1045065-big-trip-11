@@ -31,9 +31,9 @@ export default class TripController {
       renderComponent(Position.BEFOREEND, tripDay, tripDaysList);
       const tripDayList = tripDay.getElement().querySelector(`.trip-events__list`);
       if (sortedTripEventsMocks) {
-      sortedTripEventsMocks.forEach((sortedEventMock) => {
-        new TripEventController(tripDayList, this._onDataChange, this._onViewChange).render(sortedEventMock);
-          });
+        sortedTripEventsMocks.forEach((sortedEventMock) => {
+          new TripEventController(tripDayList, this._onDataChange, this._onViewChange).render(sortedEventMock);
+        });
       }
     };
 
@@ -112,7 +112,7 @@ export default class TripController {
         const aDuration = returnEventDates(a.startDate, a.endDate).durationDiff;
         const bDuration = returnEventDates(b.startDate, b.endDate).durationDiff;
         return bDuration - aDuration;
-      })
+      });
         break;
       default:
         throw new Error(`Switch case doesn't exist at sortTripEvents`);

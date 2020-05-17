@@ -1,7 +1,8 @@
 import AllMightySmarty from './allmightysmarty.js';
+import EventOffers from './event-offers.js';
+import {TYPES} from '../utils/constants';
 import {splitAString} from '../utils/general.js';
 import {addArticleToEventType, returnEventDates} from '../utils/event-helpers';
-import {TYPES} from '../utils/constants';
 import {existingOffers} from '../mocks/event.js';
 import {returnEventOffersOnEdit} from './event-offers.js';
 import flatpickr from "flatpickr";
@@ -12,6 +13,7 @@ const returnEditEvent = (tripEvent) => {
   let {description, pictures, name} = tripEvent.destination;
   const eventIcon = splitAString(tripEvent.type.toLowerCase(), ` `);
   const isFavorite = tripEvent.isFavorite === false ? `` : `checked`;
+  const eventOffers = new EventOffers(tripEvent.offers).getEventTemplateOnEdit();
 
   return `<li class="trip-events__item">
   <form class="event  event--edit" action="#" method="post">
@@ -135,7 +137,7 @@ const returnEditEvent = (tripEvent) => {
     <section class="event__details">
       <section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-        ${returnEventOffersOnEdit(tripEvent.offers)}
+        ${eventOffers}
       </section>
       <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">${name}</h3>
@@ -210,11 +212,13 @@ export default class EditTripEvent extends AllMightySmarty {
     }
     const calendarInputs = this.getElement().querySelectorAll(`.event__input--time`);
     calendarInputs.forEach((input) => this._flatpickr = flatpickr(input, {
+      /* eslint-disable */
       allowInput: true,
       enableTime: true,
       time_24hr: true,
       dateFormat: `d/m/Y H:i`
+      /* eslint-enable */
     }));
+    return calendarInputs;
   }
-
 }
