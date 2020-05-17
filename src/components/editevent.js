@@ -1,16 +1,17 @@
 import AllMightySmarty from './allmightysmarty.js';
 import {splitAString} from '../utils/general.js';
-import {addArticleToEventType} from '../utils/event-helpers';
+import {addArticleToEventType, returnEventDates} from '../utils/event-helpers';
 import {TYPES} from '../utils/constants';
 import {existingOffers} from '../mocks/event.js';
 import {returnEventOffersOnEdit} from './event-offers.js';
+import flatpickr from "flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
 
 const returnEditEvent = (tripEvent) => {
-  let {startMinutes, startHours, startDay, startMonth, startYear} = tripEvent.date_from;
-  let {endMinutes, endHours, endDay, endMonth} = tripEvent.date_to;
+  let {startDateWithSlash, endDateWithSlash, startTime, endTime} = returnEventDates(tripEvent.startISODate, tripEvent.endISODate);
   let {description, pictures, name} = tripEvent.destination;
   const eventIcon = splitAString(tripEvent.type.toLowerCase(), ` `);
-  const isFavorite = tripEvent.is_favorite === false ? `` : `checked`;
+  const isFavorite = tripEvent.isFavorite === false ? `` : `checked`;
 
   return `<li class="trip-events__item">
   <form class="event  event--edit" action="#" method="post">
@@ -99,12 +100,12 @@ const returnEditEvent = (tripEvent) => {
         <label class="visually-hidden" for="event-start-time-1">
           From
         </label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startDay}/${startMonth}/${startYear} ${startHours}:${startMinutes}">
+        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startDateWithSlash} ${startTime}">
         &mdash;
         <label class="visually-hidden" for="event-end-time-1">
           To
         </label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endDay}/${endMonth}/${startYear} ${endHours}:${endMinutes}">
+        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endDateWithSlash} ${endTime}">
       </div>
 
       <div class="event__field-group  event__field-group--price">
@@ -112,7 +113,7 @@ const returnEditEvent = (tripEvent) => {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${tripEvent.base_price}">
+        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${tripEvent.price}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -155,8 +156,10 @@ export default class EditTripEvent extends AllMightySmarty {
   constructor(tripEvent) {
     super();
     this._tripEvent = tripEvent;
+    this._flatpickr = null;
     this._changeType();
     this._changeDestination();
+    this._applyFlatpickr();
   }
 
   getTemplate() {
@@ -168,6 +171,7 @@ export default class EditTripEvent extends AllMightySmarty {
     this.setClickOnFavHandler();
     this._changeType();
     this._changeDestination();
+    this._applyFlatpickr();
   }
 
   setSubmitHandler(handler) {
@@ -197,6 +201,20 @@ export default class EditTripEvent extends AllMightySmarty {
       this.rerender();
       this.recoveryListeners();
     });
+  }
+
+  _applyFlatpickr() {
+    if (this._flatpickr) {
+      this._flatpickr.destroy();
+      this._flatpickr = null;
+    }
+    const calendarInputs = this.getElement().querySelectorAll(`.event__input--time`);
+    calendarInputs.forEach((input) => this._flatpickr = flatpickr(input, {
+      allowInput: true,
+      enableTime: true,
+      time_24hr: true,
+      dateFormat: `d/m/Y H:i`
+    }));
   }
 
 }

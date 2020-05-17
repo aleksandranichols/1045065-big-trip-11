@@ -1,36 +1,10 @@
-import {splitAString} from '../utils/general.js';
-import {DAYS_NAME, HOURS_NAME, MINUTES_NAME} from '../utils/constants.js';
-import {returnEventOffers} from './event-offers.js';
 import AllMighty from './allmighty.js';
+import {splitAString} from '../utils/general.js';
+import {returnEventDates} from '../utils/event-helpers.js';
+import {returnEventOffers} from './event-offers.js';
 
 const returnEvent = (tripEvent) => {
-  let {startMinutes, startHours, startDay, startMonth, startYear} = tripEvent.date_from;
-  let {endMinutes, endHours, endDay, endMonth} = tripEvent.date_to;
-
-  const generateDuration = (endDuration, startDuration, durationName) => {
-    let duration;
-    if (endDuration < startDuration) {
-      duration = -(endDuration - startDuration) + durationName;
-    } else {
-      if (endDuration === startDuration) {
-        duration = ``;
-      } else {
-        duration = endDuration - startDuration + durationName;
-      }
-    }
-    return duration;
-  };
-
-  const generateEventDuration = () => {
-    const durationDays = generateDuration(endDay, startDay, DAYS_NAME);
-    const durationHours = generateDuration(endHours, startHours, HOURS_NAME);
-    const durationMinutes = generateDuration(endMinutes, startMinutes, MINUTES_NAME);
-
-    const eventDuration = {durationDays, durationHours, durationMinutes};
-    return eventDuration;
-  };
-
-  let {durationDays, durationHours, durationMinutes} = generateEventDuration();
+  let {startDateWithDash, endDateWithDash, startTime, endTime, durationDays, durationHours, durationMinutes} = returnEventDates(tripEvent.startISODate, tripEvent.endISODate);
 
   const eventIcon = splitAString(tripEvent.type.toLowerCase(), ` `);
 
@@ -43,15 +17,15 @@ const returnEvent = (tripEvent) => {
 
     <div class="event__schedule">
       <p class="event__time">
-        <time class="event__start-time" datetime="${startYear}-${startMonth}-${startDay}T${startHours}:${startMinutes}">${startHours}:${startMinutes}</time>
+        <time class="event__start-time" datetime="${startDateWithDash}T${startTime}">${startTime}</time>
         &mdash;
-        <time class="event__end-time" datetime="${startYear}-${endMonth}-${endDay}T${endHours}:${endMinutes}">${endHours}:${endMinutes}</time>
+        <time class="event__end-time" datetime="${endDateWithDash}T${endTime}">${endTime}</time>
       </p>
-      <p class="event__duration">${durationDays}${durationHours}${durationMinutes}</p>
+      <p class="event__duration">${durationDays} ${durationHours}H ${durationMinutes}M</p>
     </div>
 
     <p class="event__price">
-      &euro;&nbsp;<span class="event__price-value">${tripEvent.base_price}</span>
+      &euro;&nbsp;<span class="event__price-value">${tripEvent.price}</span>
     </p>
 
     <h4 class="visually-hidden">Offers:</h4>

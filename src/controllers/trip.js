@@ -56,7 +56,7 @@ export default class TripController {
     const days = [];
 
     mocks.forEach((eventMock, index) => {
-      const currentEventDay = mocks[index].date_from.startDay;
+      const currentEventDay = mocks[index].startISODate.startDay;
       let tripDay = this._container.querySelector(`.day-${listCounter - 1}`);
 
       if (tripDay !== null && days.some((day) => day.currentEventDay === currentEventDay)) {

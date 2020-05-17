@@ -1,7 +1,6 @@
 import {Position} from './constants.js';
 
 export const toggleComponents = (oldComponent, newComponent) => {
-  console.log(oldComponent.getElement(), newComponent.getElement());
   oldComponent.getElement().replaceWith(newComponent.getElement());
 };
 

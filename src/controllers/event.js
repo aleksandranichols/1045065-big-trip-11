@@ -35,18 +35,17 @@ export default class TripEventController {
 
     editTripEvent.setSubmitHandler((evt) => {
       evt.preventDefault();
-      console.log(editTripEvent, tripEvent);
       toggleComponents(editTripEvent, tripEvent);
     });
 
     editTripEvent.setClickOnFavHandler(() => {
-      this._onDataChange(this, eventMock, Object.assign({}, eventMock, {is_favorite: !eventMock.is_favorite}));
+      this._onDataChange(this, eventMock, Object.assign({}, eventMock, {isFavorite: !eventMock.isFavorite}));
     });
   }
 
   setDefaultView() {
     if (this.editTripEvent !== undefined && this.tripEvent !== undefined) {
-      toggleComponents(this.editTripEvent, this.tripEvent);
+      // toggleComponents(this.editTripEvent, this.tripEvent);
     }
   }
 }
