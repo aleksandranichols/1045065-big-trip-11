@@ -8,7 +8,7 @@ import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
 const returnEditEvent = (tripEvent) => {
-  let {startDateWithSlash, endDateWithSlash, startTime, endTime} = returnEventDates(tripEvent.startISODate, tripEvent.endISODate);
+  let {startDateWithSlash, endDateWithSlash, startTime, endTime} = returnEventDates(tripEvent.startDate, tripEvent.endDate);
   let {description, pictures, name} = tripEvent.destination;
   const eventIcon = splitAString(tripEvent.type.toLowerCase(), ` `);
   const isFavorite = tripEvent.isFavorite === false ? `` : `checked`;

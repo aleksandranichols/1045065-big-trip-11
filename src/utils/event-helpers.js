@@ -10,14 +10,13 @@ export const returnEventDates = (dateFrom, dateTo) => {
   const startTime = startDate.format(`HH:mm`);
   const endTime = endDate.format(`HH:mm`);
   const shortDate = startDate.format(`MMM DD`);
-  const duration = moment.duration(endDate.diff(startDate));
-  let durationDays = duration._data.days;
+  const durationDiff = moment.duration(endDate.diff(startDate));
+  let durationDays = durationDiff.days();
   durationDays === 0 ? durationDays = `` : durationDays + `D`;
-  const durationHours = duration._data.hours;
-  const durationMinutes = duration._data.minutes;
+  const duration = durationDays + ` ` + durationDiff.hours() + `H ` + durationDiff.minutes() + `M`;
 
   return {startDateWithDash, endDateWithDash, startDateWithSlash, endDateWithSlash, shortDate,
-    startTime, endTime, durationDays, durationHours, durationMinutes};
+    startTime, endTime, durationDiff, duration};
 };
 
 export const addArticleToEventType = (eventType, allEventTypes) => {

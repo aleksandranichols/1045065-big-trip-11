@@ -6,6 +6,7 @@ import TripList from '../components/trip-days.js';
 import TripDayDetails from '../components/trip-day-details.js';
 import {renderComponent} from '../utils/render.js';
 import {Position, SortType} from '../utils/constants.js';
+import {returnEventDates} from '../utils/event-helpers.js';
 
 export default class TripController {
   constructor(container, eventMocks) {
@@ -29,9 +30,11 @@ export default class TripController {
       tripDay.getElement().querySelector(`div`).innerHTML = ``;
       renderComponent(Position.BEFOREEND, tripDay, tripDaysList);
       const tripDayList = tripDay.getElement().querySelector(`.trip-events__list`);
+      if (sortedTripEventsMocks) {
       sortedTripEventsMocks.forEach((sortedEventMock) => {
         new TripEventController(tripDayList, this._onDataChange, this._onViewChange).render(sortedEventMock);
-      });
+          });
+      }
     };
 
     this._sorting.setClickHandler(sortTripEventsByType);
@@ -56,7 +59,7 @@ export default class TripController {
     const days = [];
 
     mocks.forEach((eventMock, index) => {
-      const currentEventDay = mocks[index].startISODate.startDay;
+      const currentEventDay = mocks[index].startDate.startDay;
       let tripDay = this._container.querySelector(`.day-${listCounter - 1}`);
 
       if (tripDay !== null && days.some((day) => day.currentEventDay === currentEventDay)) {
@@ -105,9 +108,11 @@ export default class TripController {
         break;
       case SortType.TIME:
         sortedEventMocks.
-      sort((a, b) => b.date_from.startYear - a.date_from.startYear).
-      sort((a, b) => b.date_from.startMonth - a.date_from.startMonth).
-      sort((a, b) => b.date_from.startDay - a.date_from.startDay);
+      sort((a, b) => {
+        const aDuration = returnEventDates(a.startDate, a.endDate).durationDiff;
+        const bDuration = returnEventDates(b.startDate, b.endDate).durationDiff;
+        return bDuration - aDuration;
+      })
         break;
       default:
         throw new Error(`Switch case doesn't exist at sortTripEvents`);

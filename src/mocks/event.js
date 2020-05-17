@@ -30,8 +30,8 @@ const generateTripEvent = () => {
   const randomOffer = returnRandomElementInArray(existingOffers);
   return {
     price: getRandomIntegerInRange(EventPrice.MIN, EventPrice.MAX),
-    startISODate: `2019-07-10T22:55:56.845Z`,
-    endISODate: `2019-07-11T11:22:13.375Z`,
+    startDate: `2019-07-10T22:55:56.845Z`,
+    endDate: `2019-07-11T11:22:13.375Z`,
     destination: {
       description: returnRandomDescription(),
       name: randomCity,
@@ -54,5 +54,5 @@ export const generateTripEventMocks = (count) => {
   return new Array(count).
   fill(``).
   map(generateTripEvent).
-  sort((a, b) => a.startISODate - b.endISODate);
+  sort((a, b) => a.startDate - b.endDate);
 };

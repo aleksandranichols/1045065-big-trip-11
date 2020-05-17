@@ -4,7 +4,7 @@ import {returnEventDates} from '../utils/event-helpers.js';
 import {returnEventOffers} from './event-offers.js';
 
 const returnEvent = (tripEvent) => {
-  let {startDateWithDash, endDateWithDash, startTime, endTime, durationDays, durationHours, durationMinutes} = returnEventDates(tripEvent.startISODate, tripEvent.endISODate);
+  let {startDateWithDash, endDateWithDash, startTime, endTime, duration} = returnEventDates(tripEvent.startDate, tripEvent.endDate);
 
   const eventIcon = splitAString(tripEvent.type.toLowerCase(), ` `);
 
@@ -21,7 +21,7 @@ const returnEvent = (tripEvent) => {
         &mdash;
         <time class="event__end-time" datetime="${endDateWithDash}T${endTime}">${endTime}</time>
       </p>
-      <p class="event__duration">${durationDays} ${durationHours}H ${durationMinutes}M</p>
+      <p class="event__duration">${duration}</p>
     </div>
 
     <p class="event__price">
