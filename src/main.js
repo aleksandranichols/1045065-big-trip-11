@@ -1,6 +1,7 @@
-import Navigation from './components/navigation.js';
 import Filters from './components/filters.js';
+import Navigation from './components/navigation.js';
 import NoTripEvents from './components/no-trip-events.js';
+import TripEvents from './models/events.js'
 import TripController from './controllers/trip.js';
 import {renderComponent} from './utils/render.js';
 import {generateTripEventMocks} from './mocks/event.js';
@@ -20,7 +21,7 @@ const renderATrip = (numberOfEvents) => {
     renderComponent(Position.BEFOREEND, new NoTripEvents(), tripList);
   } else {
     const tripEvents = generateTripEventMocks(numberOfEvents);
-    new TripController(body, tripEvents).render();
+    new TripController(body, new TripEvents(tripEvents).getData()).render();
   }
 };
 
