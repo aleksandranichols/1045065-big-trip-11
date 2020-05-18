@@ -1,5 +1,9 @@
 import {Position} from './constants.js';
 
+export const toggleComponents = (oldComponent, newComponent) => {
+  oldComponent.getElement().replaceWith(newComponent.getElement());
+};
+
 export const createDOMElement = (template) => {
   const div = document.createElement(`div`);
   div.innerHTML = template;

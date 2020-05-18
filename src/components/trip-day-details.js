@@ -1,22 +1,17 @@
-import {MONTH_NAMES} from '../utils/constants.js';
 import AllMighty from './allmighty.js';
+import {returnEventDates} from '../utils/event-helpers.js';
 
 export const returnTripDayDetails = (tripEvent, counter) => {
-  let startDay = ``;
-  let startMonth = ``;
-  let startYear = ``;
-  let startMonthShort = ``;
+  let startDateWithDash = ``;
+  let shortDate = ``;
   if (tripEvent !== null) {
-    startDay = tripEvent.startDates.startDay;
-    startMonth = tripEvent.startDates.startMonth;
-    startYear = tripEvent.startDates.startYear;
-    startMonthShort = MONTH_NAMES[startMonth - 1];
+    startDateWithDash = returnEventDates(tripEvent.startDate, tripEvent.endDate).startDateWithDash;
+    shortDate = returnEventDates(tripEvent.startDate, tripEvent.endDate).shortDate;
   }
-
   return `<li class="trip-days__item  day">
     <div class="day__info">
       <span class="day__counter">${counter}</span>
-      <time class="day__date" datetime="${startYear}-${startMonth}-${startDay}">${startMonthShort} ${startDay}</time>
+      <time class="day__date" datetime="${startDateWithDash}">${shortDate}</time>
     </div>
 
     <ul class="trip-events__list">

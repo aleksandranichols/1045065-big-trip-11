@@ -10,7 +10,7 @@ export default class AllMighty {
   }
 
   getTemplate() {
-    throw new Error(`method getTemplate is required`);
+    throw new Error(`Method getTemplate is required`);
   }
 
   getElement() {
