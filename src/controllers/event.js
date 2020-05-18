@@ -8,8 +8,8 @@ export default class TripEventController {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
-    this.tripEvent;
-    this.editTripEvent;
+    this.tripEvent = null;
+    this.editTripEvent = null;
   }
 
   render(eventMock) {
@@ -44,8 +44,8 @@ export default class TripEventController {
   }
 
   setDefaultView() {
-    if (this.editTripEvent !== undefined && this.tripEvent !== undefined) {
-      // toggleComponents(this.editTripEvent, this.tripEvent);
+    if (document.contains(this.editTripEvent.getElement())) {
+      toggleComponents(this.editTripEvent, this.tripEvent);
     }
   }
 }

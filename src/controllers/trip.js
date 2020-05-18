@@ -81,7 +81,7 @@ export default class TripController {
     });
   }
 
-  _onDataChange(TripEventController, oldTripEventData, newTripEventData) {
+  _onDataChange(oldTripEventData, newTripEventData) {
     // find index of changed event
     const index = this._eventMocks.findIndex((eventMock) => eventMock === oldTripEventData);
 

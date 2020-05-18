@@ -1,8 +1,7 @@
 import AllMighty from './allmighty.js';
 import EventOffers from './event-offers.js';
-import {splitAString} from '../utils/general.js';
 import {returnEventDates} from '../utils/event-helpers.js';
-import {returnEventOffers} from './event-offers.js';
+import {splitAString} from '../utils/general.js';
 
 const returnEvent = (tripEvent) => {
   let {startDateWithDash, endDateWithDash, startTime, endTime, duration} = returnEventDates(tripEvent.startDate, tripEvent.endDate);

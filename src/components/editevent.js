@@ -1,10 +1,9 @@
 import AllMightySmarty from './allmightysmarty.js';
 import EventOffers from './event-offers.js';
 import {TYPES} from '../utils/constants';
-import {splitAString} from '../utils/general.js';
 import {addArticleToEventType, returnEventDates} from '../utils/event-helpers';
+import {splitAString} from '../utils/general.js';
 import {existingOffers} from '../mocks/event.js';
-import {returnEventOffersOnEdit} from './event-offers.js';
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
@@ -60,7 +59,7 @@ const returnEditEvent = (tripEvent) => {
             </div>
 
             <div class="event__type-item">
-              <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" checked>
+              <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight">
               <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
             </div>
           </fieldset>
@@ -79,7 +78,7 @@ const returnEditEvent = (tripEvent) => {
             </div>
 
             <div class="event__type-item">
-              <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
+              <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant" >
               <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
             </div>
           </fieldset>
@@ -162,6 +161,7 @@ export default class EditTripEvent extends AllMightySmarty {
     this._changeType();
     this._changeDestination();
     this._applyFlatpickr();
+    this._setCheckedOnType();
   }
 
   getTemplate() {
@@ -184,6 +184,10 @@ export default class EditTripEvent extends AllMightySmarty {
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, handler);
   }
 
+  _setCheckedOnType() {
+    this.getElement().querySelector(`input[value=${splitAString(this._tripEvent.type.toLowerCase(), ` `)[0].toLowerCase()}]`).setAttribute(`checked`, ``);
+  }
+
   _changeType() {
     const allEventsLabels = this.getElement().querySelectorAll(`.event__type-label`);
     allEventsLabels.forEach((label) => label.addEventListener(`click`, () => {
@@ -192,6 +196,7 @@ export default class EditTripEvent extends AllMightySmarty {
       this._tripEvent.offers = existingOffers[currentOfferIndex];
       this.rerender();
       this.recoveryListeners();
+      this._setCheckedOnType();
     }));
   }
 
@@ -211,14 +216,13 @@ export default class EditTripEvent extends AllMightySmarty {
       this._flatpickr = null;
     }
     const calendarInputs = this.getElement().querySelectorAll(`.event__input--time`);
+    /* eslint-disable */
     calendarInputs.forEach((input) => this._flatpickr = flatpickr(input, {
-      /* eslint-disable */
       allowInput: true,
       enableTime: true,
       time_24hr: true,
       dateFormat: `d/m/Y H:i`
-      /* eslint-enable */
     }));
-    return calendarInputs;
+    /* eslint-enable */
   }
 }

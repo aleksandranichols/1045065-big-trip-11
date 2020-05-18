@@ -11,9 +11,8 @@ export const returnEventDates = (dateFrom, dateTo) => {
   const endTime = endDate.format(`HH:mm`);
   const shortDate = startDate.format(`MMM DD`);
   const durationDiff = moment.duration(endDate.diff(startDate));
-  let durationDays = durationDiff.days();
-  durationDays === 0 ? durationDays = `` : durationDays + `D`;
-  const duration = durationDays + ` ` + durationDiff.hours() + `H ` + durationDiff.minutes() + `M`;
+  let durationDays = durationDiff.days() === 0 ? `` : durationDays + `D`;
+  const duration = `${durationDays} ${durationDiff.hours()}H ${durationDiff.minutes()}M`;
 
   return {startDateWithDash, endDateWithDash, startDateWithSlash, endDateWithSlash, shortDate,
     startTime, endTime, durationDiff, duration};
@@ -21,10 +20,8 @@ export const returnEventDates = (dateFrom, dateTo) => {
 
 export const addArticleToEventType = (eventType, allEventTypes) => {
   const LAST_INDEX_OF_TRANSPORT_EVENT = 6;
-  if (allEventTypes.indexOf(eventType) > LAST_INDEX_OF_TRANSPORT_EVENT) {
-    eventType = eventType + ` in`;
-  } else {
-    eventType = eventType + ` to`;
-  }
-  return eventType;
+  const article = allEventTypes.indexOf(eventType) > LAST_INDEX_OF_TRANSPORT_EVENT
+    ? `in`
+    : `to`;
+  return `${eventType} ${article}`;
 };
