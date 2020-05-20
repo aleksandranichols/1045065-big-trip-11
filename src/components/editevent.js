@@ -171,6 +171,8 @@ export default class EditTripEvent extends AllMightySmarty {
   recoveryListeners() {
     this.setSubmitHandler();
     this.setClickOnFavHandler();
+    this.setClickOnDelHandler();
+    this.setClickOnSaveHandler();
     this._changeType();
     this._changeDestination();
     this._applyFlatpickr();
@@ -182,6 +184,14 @@ export default class EditTripEvent extends AllMightySmarty {
 
   setClickOnFavHandler(handler) {
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, handler);
+  }
+
+  setClickOnSaveHandler(handler) {
+    this.getElement().querySelector(`.event__save-btn`).addEventListener(`click`, handler);
+  }
+
+  setClickOnDelHandler(handler) {
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, handler);
   }
 
   _setCheckedOnType() {

@@ -4,28 +4,29 @@ import TripCost from '../components/tripcost.js';
 import Sorting from '../components/sorting.js';
 import TripList from '../components/trip-days.js';
 import TripDayDetails from '../components/trip-day-details.js';
+import TripEvents from '../models/events.js';
 import {renderComponent} from '../utils/render.js';
 import {Position, SortType} from '../utils/constants.js';
 import {returnEventDates} from '../utils/event-helpers.js';
 
 export default class TripController {
-  constructor(container, eventMocks) {
+  constructor(container, eventModel) {
     this._sorting = new Sorting();
     this._container = container;
-    this._eventMocks = eventMocks;
+    this._eventModel = eventModel;
     this._tripEvents = [];
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
   }
 
-  render(mocks) {
+  render() {
     this._renderTripDetails();
-    this._renderTripDays(mocks);
+    this._renderTripDays();
 
     const sortTripEventsByType = (evt) => {
       let tripDaysList = this._container.querySelector(`.trip-days`);
       tripDaysList.innerHTML = ``;
-      const sortedTripEventsMocks = this._sortTripEvents(evt, this._eventMocks);
+      const sortedTripEventsMocks = this._sortTripEvents(evt, this._eventModel.getData());
       const tripDay = new TripDayDetails(null, 0);
       tripDay.getElement().querySelector(`div`).innerHTML = ``;
       renderComponent(Position.BEFOREEND, tripDay, tripDaysList);
@@ -51,14 +52,14 @@ export default class TripController {
     renderComponent(Position.BEFOREEND, new TripCost(), tripInfo);
   }
 
-  _renderTripDays(mocks) {
-    mocks = this._eventMocks;
+  _renderTripDays() {
     let tripDaysList = this._container.querySelector(`.trip-days`);
     tripDaysList.innerHTML = ``;
     let listCounter = 1;
     const days = [];
+    const mocks = this._eventModel.getData();
 
-    mocks.forEach((eventMock, index) => {
+      mocks.forEach((eventMock, index) => {
       const currentEventDay = mocks[index].startDate.startDay;
       let tripDay = this._container.querySelector(`.day-${listCounter - 1}`);
 
@@ -83,13 +84,13 @@ export default class TripController {
 
   _onDataChange(oldTripEventData, newTripEventData) {
     // find index of changed event
-    const index = this._eventMocks.findIndex((eventMock) => eventMock === oldTripEventData);
+    const index = this._eventModel.findIndex((eventMock) => eventMock === oldTripEventData);
 
     // create new mocks with the new event data
-    this._eventMocks = [].concat(this._eventMocks.slice(0, index), newTripEventData, this._eventMocks.slice(index + 1));
+    this._eventModel = [].concat(this._eventModel.slice(0, index), newTripEventData, this._eventModel.slice(index + 1));
 
     // render event with updated data
-    TripEventController.render(this._eventMocks[index]);
+    TripEventController.render(this._eventModel[index]);
   }
 
   _onViewChange() {

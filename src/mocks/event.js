@@ -42,7 +42,7 @@ const generateTripEvent = () => {
         }
       ]
     },
-    id: 0,
+    id: Math.random(),
     isFavorite: false,
     offers: randomOffer,
     type: addArticleToEventType(randomOffer.type, TYPES),
