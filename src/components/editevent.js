@@ -1,11 +1,19 @@
 import AllMightySmarty from './allmightysmarty.js';
 import EventOffers from './event-offers.js';
-import {TYPES} from '../utils/constants';
+import {TYPES, CITIES} from '../utils/constants';
 import {addArticleToEventType, returnEventDates} from '../utils/event-helpers';
 import {splitAString} from '../utils/general.js';
 import {existingOffers} from '../mocks/event.js';
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
+
+const returnCitiesMarkUp = () => {
+  const citiesMarkUp = [];
+  CITIES.forEach((city) => {
+    citiesMarkUp.push(`<option value="${city}"></option>`);
+  });
+  return citiesMarkUp.join(`\n`);
+};
 
 const returnEditEvent = (tripEvent) => {
   let {startDateWithSlash, endDateWithSlash, startTime, endTime} = returnEventDates(tripEvent.startDate, tripEvent.endDate);
@@ -91,9 +99,7 @@ const returnEditEvent = (tripEvent) => {
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${tripEvent.city}" list="destination-list-1">
         <datalist id="destination-list-1">
-          <option value="Amsterdam"></option>
-          <option value="Geneva"></option>
-          <option value="Chamonix"></option>
+          ${returnCitiesMarkUp()}
         </datalist>
       </div>
 
@@ -114,7 +120,7 @@ const returnEditEvent = (tripEvent) => {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${tripEvent.price}">
+        <input class="event__input  event__input--price" id="event-price-1" type="text" pattern="[0-9]{10}" name="event-price" value="${tripEvent.price}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -162,6 +168,8 @@ export default class EditTripEvent extends AllMightySmarty {
     this._changeDestination();
     this._applyFlatpickr();
     this._setCheckedOnType();
+    this._setPriceInputHandler();
+    this._setDestinationInputHandler();
   }
 
   getTemplate() {
@@ -172,10 +180,11 @@ export default class EditTripEvent extends AllMightySmarty {
     this.setSubmitHandler();
     this.setClickOnFavHandler();
     this.setClickOnDelHandler();
-    this.setClickOnSaveHandler();
     this._changeType();
     this._changeDestination();
     this._applyFlatpickr();
+    this._setPriceInputHandler();
+    this._setDestinationInputHandler();
   }
 
   setSubmitHandler(handler) {
@@ -188,6 +197,25 @@ export default class EditTripEvent extends AllMightySmarty {
 
   setClickOnDelHandler(handler) {
     this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, handler);
+  }
+
+  _setPriceInputHandler() {
+    const priceInput = this.getElement().querySelector(`.event__input--price`);
+    priceInput.addEventListener(`input`, (evt) => {
+      const newValue = evt.target.value.replace(new RegExp(/[^\d]/, `ig`), ``);
+      evt.target.value = newValue;
+    });
+  }
+
+  _setDestinationInputHandler() {
+    const destinationInput = this.getElement().querySelector(`.event__input--destination`);
+    destinationInput.addEventListener(`input`, (evt) => {
+      if (CITIES.find((city) => city === evt.target.value)) {
+        return;
+      } else {
+        evt.target.value = ``;
+      }
+    });
   }
 
   _setCheckedOnType() {

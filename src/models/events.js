@@ -10,7 +10,6 @@ export default class TripEvents {
   }
 
   getData() {
-    console.log(this._getDataByAFilterType(this._currentFilter));
     return this._getDataByAFilterType(this._currentFilter);
   }
 
@@ -21,7 +20,7 @@ export default class TripEvents {
   updateData(id, newTripEventData) {
     const index = this._tripEventData.findIndex((data) => data.id === id);
     this._tripEventData = [].concat(this._tripEventData.slice(0, index), newTripEventData, this._tripEventData.slice(index + 1));
-    this._callHandlers(this._dataChangeHandlers); //выдает повторный вызов функции в контроллере Trip со значением undefined
+    this._callHandlers(this._dataChangeHandlers); // выдает повторный вызов функции в контроллере Trip со значением undefined
   }
 
   removeData(id) {
