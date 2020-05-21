@@ -120,7 +120,7 @@ const returnEditEvent = (tripEvent) => {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" pattern="[0-9]{10}" name="event-price" value="${tripEvent.price}">
+        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${tripEvent.price}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -202,7 +202,7 @@ export default class EditTripEvent extends AllMightySmarty {
   _setPriceInputHandler() {
     const priceInput = this.getElement().querySelector(`.event__input--price`);
     priceInput.addEventListener(`input`, (evt) => {
-      const newValue = evt.target.value.replace(new RegExp(/[^\d]/, `ig`), ``);
+      const newValue = evt.target.value.replace(new RegExp(/[^0-9]/, `ig`), ``);
       evt.target.value = newValue;
     });
   }

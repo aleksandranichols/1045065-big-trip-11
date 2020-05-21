@@ -90,6 +90,7 @@ export default class TripController {
       this._eventModel.addData(newTripEventData);
       this._renderTripDays();
     } else {
+      console.log(oldTripEventData, newTripEventData);
       this._eventModel.updateData(oldTripEventData.id, newTripEventData);
       EventController.render(newTripEventData);
     }
@@ -100,13 +101,15 @@ export default class TripController {
   }
 
   _onFilterChange() {
+    const tripEvents = this._container.querySelector(`.trip-events`);
+    renderComponent(Position.BEFOREEND, this._sorting, tripEvents);
     this._renderTripDays();
   }
 
   _sortTripEvents(sortType, eventMocks) {
     let sortedEventMocks = eventMocks.slice();
     switch (sortType) {
-      case SortType.DEFAULT:
+      case SortType.EVENT:
         this._renderTripDays();
         sortedEventMocks = ``;
         break;
