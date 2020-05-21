@@ -4,7 +4,6 @@ import TripCost from '../components/tripcost.js';
 import Sorting from '../components/sorting.js';
 import TripList from '../components/trip-days.js';
 import TripDayDetails from '../components/trip-day-details.js';
-import TripEvents from '../models/events.js';
 import {renderComponent} from '../utils/render.js';
 import {Position, SortType} from '../utils/constants.js';
 import {returnEventDates} from '../utils/event-helpers.js';
@@ -17,12 +16,14 @@ export default class TripController {
     this._tripEvents = [];
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
+    this._eventModel.setFilterChangeHandler(this._onFilterChange);
+    this._eventModel.setDataChangeHandler(this._onDataChange);
   }
 
   render() {
     this._renderTripDetails();
     this._renderTripDays();
-
     const sortTripEventsByType = (evt) => {
       let tripDaysList = this._container.querySelector(`.trip-days`);
       tripDaysList.innerHTML = ``;
@@ -39,7 +40,6 @@ export default class TripController {
     };
 
     this._sorting.setClickHandler(sortTripEventsByType);
-
   }
 
   _renderTripDetails() {
@@ -59,11 +59,11 @@ export default class TripController {
     const days = [];
     const mocks = this._eventModel.getData();
 
-      mocks.forEach((eventMock, index) => {
-      const currentEventDay = mocks[index].startDate.startDay;
+    mocks.forEach((eventMock, index) => {
+      let {startDateWithDash} = returnEventDates(mocks[index].startDate, mocks[index].endDate);
       let tripDay = this._container.querySelector(`.day-${listCounter - 1}`);
 
-      if (tripDay !== null && days.some((day) => day.currentEventDay === currentEventDay)) {
+      if (tripDay !== null && days.some((day) => day.startDateWithDash === startDateWithDash)) {
         const tripDayList = tripDay.querySelector(`.trip-events__list`);
         const tripEvent = new TripEventController(tripDayList, this._onDataChange, this._onViewChange);
         tripEvent.render(eventMock);
@@ -73,7 +73,7 @@ export default class TripController {
         const tripDayList = tripDay.getElement().querySelector(`.trip-events__list`);
         renderComponent(Position.BEFOREEND, tripDay, tripDaysList);
         tripDay.getElement().classList.add(`day-${listCounter}`);
-        days.push({listCounter, currentEventDay});
+        days.push({listCounter, startDateWithDash});
         const tripEvent = new TripEventController(tripDayList, this._onDataChange, this._onViewChange);
         tripEvent.render(eventMock);
         this._tripEvents.push(tripEvent);
@@ -82,19 +82,25 @@ export default class TripController {
     });
   }
 
-  _onDataChange(oldTripEventData, newTripEventData) {
-    // find index of changed event
-    const index = this._eventModel.findIndex((eventMock) => eventMock === oldTripEventData);
-
-    // create new mocks with the new event data
-    this._eventModel = [].concat(this._eventModel.slice(0, index), newTripEventData, this._eventModel.slice(index + 1));
-
-    // render event with updated data
-    TripEventController.render(this._eventModel[index]);
+  _onDataChange(EventController, oldTripEventData, newTripEventData) {
+    if (newTripEventData === null) {
+      this._eventModel.removeData(oldTripEventData.id);
+      this._renderTripDays();
+    } else if (oldTripEventData === null) {
+      this._eventModel.addData(newTripEventData);
+      this._renderTripDays();
+    } else {
+      this._eventModel.updateData(oldTripEventData.id, newTripEventData);
+      EventController.render(newTripEventData);
+    }
   }
 
   _onViewChange() {
     this._tripEvents.forEach((it) => it.setDefaultView());
+  }
+
+  _onFilterChange() {
+    this._renderTripDays();
   }
 
   _sortTripEvents(sortType, eventMocks) {

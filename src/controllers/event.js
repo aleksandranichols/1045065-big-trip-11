@@ -1,7 +1,7 @@
 import EditTripEvent from '../components/editevent.js';
 import TripEvent from '../components/event.js';
-import {renderComponent, toggleComponents} from '../utils/render.js';
 import {Position} from '../utils/constants.js';
+import {renderComponent, toggleComponents} from '../utils/render.js';
 
 export default class TripEventController {
   constructor(container, onDataChange, onViewChange) {
@@ -40,6 +40,10 @@ export default class TripEventController {
 
     editTripEvent.setClickOnFavHandler(() => {
       this._onDataChange(this, eventMock, Object.assign({}, eventMock, {isFavorite: !eventMock.isFavorite}));
+    });
+
+    editTripEvent.setClickOnDelHandler(() => {
+      this._onDataChange(this, eventMock, null);
     });
   }
 

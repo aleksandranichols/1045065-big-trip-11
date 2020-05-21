@@ -186,10 +186,6 @@ export default class EditTripEvent extends AllMightySmarty {
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, handler);
   }
 
-  setClickOnSaveHandler(handler) {
-    this.getElement().querySelector(`.event__save-btn`).addEventListener(`click`, handler);
-  }
-
   setClickOnDelHandler(handler) {
     this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, handler);
   }

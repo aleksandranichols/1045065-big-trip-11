@@ -30,7 +30,7 @@ export default class Filters extends AllMighty {
       filterButton.addEventListener(`click`, (evt) => {
         const currentFilterType = evt.target.dataset.filterType;
         handler(currentFilterType);
-      });
+      }, true);
     });
   }
 }
