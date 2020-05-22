@@ -7,13 +7,7 @@ import {existingOffers} from '../mocks/event.js';
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
-const returnCitiesMarkUp = () => {
-  const citiesMarkUp = [];
-  CITIES.forEach((city) => {
-    citiesMarkUp.push(`<option value="${city}"></option>`);
-  });
-  return citiesMarkUp.join(`\n`);
-};
+const returnCitiesMarkUp = () => CITIES.map((city) => `<option value="${city}"></option>`).join(`\n`);
 
 const returnEditEvent = (tripEvent) => {
   let {startDateWithSlash, endDateWithSlash, startTime, endTime} = returnEventDates(tripEvent.startDate, tripEvent.endDate);
@@ -164,6 +158,9 @@ export default class EditTripEvent extends AllMightySmarty {
     super();
     this._tripEvent = tripEvent;
     this._flatpickr = null;
+    this._submitHandler = null;
+    this._favHandler = null;
+    this._delHandler = null;
     this._changeType();
     this._changeDestination();
     this._applyFlatpickr();
@@ -177,9 +174,9 @@ export default class EditTripEvent extends AllMightySmarty {
   }
 
   recoveryListeners() {
-    this.setSubmitHandler();
-    this.setClickOnFavHandler();
-    this.setClickOnDelHandler();
+    this.setSubmitHandler(this._submitHandler);
+    this.setClickOnFavHandler(this._favHandler);
+    this.setClickOnDelHandler(this._delHandler);
     this._changeType();
     this._changeDestination();
     this._applyFlatpickr();
@@ -189,21 +186,23 @@ export default class EditTripEvent extends AllMightySmarty {
 
   setSubmitHandler(handler) {
     this.getElement().addEventListener(`submit`, handler);
+    this._submitHandler = handler;
   }
 
   setClickOnFavHandler(handler) {
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, handler);
+    this._favHandler = handler;
   }
 
   setClickOnDelHandler(handler) {
     this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, handler);
+    this._delHandler = handler;
   }
 
   _setPriceInputHandler() {
     const priceInput = this.getElement().querySelector(`.event__input--price`);
     priceInput.addEventListener(`input`, (evt) => {
-      const newValue = evt.target.value.replace(new RegExp(/[^0-9]/, `ig`), ``);
-      evt.target.value = newValue;
+      evt.target.value = evt.target.value.replace(new RegExp(/[^0-9]/, `ig`), ``);
     });
   }
 
@@ -255,7 +254,7 @@ export default class EditTripEvent extends AllMightySmarty {
       allowInput: true,
       enableTime: true,
       time_24hr: true,
-      dateFormat: `d/m/Y H:i`
+      dateFormat: `d/m/y H:i`
     }));
     /* eslint-enable */
   }

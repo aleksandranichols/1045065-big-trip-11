@@ -57,25 +57,25 @@ export default class TripController {
     tripDaysList.innerHTML = ``;
     let listCounter = 1;
     const days = [];
-    const mocks = this._eventModel.getData();
+    const data = this._eventModel.getData();
 
-    mocks.forEach((eventMock, index) => {
-      let {startDateWithDash} = returnEventDates(mocks[index].startDate, mocks[index].endDate);
+    data.forEach((eventData, index) => {
+      let {startDateWithDash} = returnEventDates(data[index].startDate, data[index].endDate);
       let tripDay = this._container.querySelector(`.day-${listCounter - 1}`);
 
       if (tripDay !== null && days.some((day) => day.startDateWithDash === startDateWithDash)) {
         const tripDayList = tripDay.querySelector(`.trip-events__list`);
         const tripEvent = new TripEventController(tripDayList, this._onDataChange, this._onViewChange);
-        tripEvent.render(eventMock);
+        tripEvent.render(eventData);
         this._tripEvents.push(tripEvent);
       } else {
-        tripDay = new TripDayDetails(mocks[index], listCounter);
+        tripDay = new TripDayDetails(data[index], listCounter);
         const tripDayList = tripDay.getElement().querySelector(`.trip-events__list`);
         renderComponent(Position.BEFOREEND, tripDay, tripDaysList);
         tripDay.getElement().classList.add(`day-${listCounter}`);
         days.push({listCounter, startDateWithDash});
         const tripEvent = new TripEventController(tripDayList, this._onDataChange, this._onViewChange);
-        tripEvent.render(eventMock);
+        tripEvent.render(eventData);
         this._tripEvents.push(tripEvent);
         listCounter++;
       }
@@ -101,13 +101,12 @@ export default class TripController {
   }
 
   _onFilterChange() {
-    const tripEvents = this._container.querySelector(`.trip-events`);
-    renderComponent(Position.BEFOREEND, this._sorting, tripEvents);
     this._renderTripDays();
+    this._sortTripEvents(`event`, this._eventModel.getData());
   }
 
-  _sortTripEvents(sortType, eventMocks) {
-    let sortedEventMocks = eventMocks.slice();
+  _sortTripEvents(sortType, eventDatas) {
+    let sortedEventMocks = eventDatas.slice();
     switch (sortType) {
       case SortType.EVENT:
         this._renderTripDays();

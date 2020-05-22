@@ -2,9 +2,9 @@ import {FilterType} from '../utils/constants';
 import {returnEventDates} from '../utils/event-helpers.js';
 
 export default class TripEvents {
-  constructor(mocks) {
+  constructor(data) {
     this._currentFilter = FilterType.DEFAULT;
-    this._tripEventData = mocks;
+    this._tripEventData = data;
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
   }
@@ -21,7 +21,7 @@ export default class TripEvents {
     const index = this._tripEventData.findIndex((data) => data.id === id);
     this._tripEventData = [].concat(this._tripEventData.slice(0, index), newTripEventData, this._tripEventData.slice(index + 1));
     console.log(this._dataChangeHandlers, this._tripEventData);
-    // this._callHandlers(this._dataChangeHandlers); // выдает повторный вызов функции в контроллере Trip со значением undefined
+    this._callHandlers(this._dataChangeHandlers); // выдает повторный вызов функции в контроллере Trip со значением undefined
     // верно, что при апдейте мне нужно как то данные в getData() передавать? поскольку мы тут создали новый массив
   }
 
