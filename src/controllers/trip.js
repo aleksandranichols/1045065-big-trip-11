@@ -90,7 +90,6 @@ export default class TripController {
       this._eventModel.addData(newTripEventData);
       this._renderTripDays();
     } else {
-      console.log(oldTripEventData, newTripEventData);
       this._eventModel.updateData(oldTripEventData.id, newTripEventData);
       EventController.render(newTripEventData);
     }
