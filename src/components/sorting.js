@@ -50,7 +50,6 @@ export default class Sorting extends AllMighty {
     let oldSortType = this._oldSortType;
     this.getElement().querySelectorAll(`.trip-sort__btn`).forEach((sortButton) => {
       sortButton.addEventListener(`click`, (evt) => {
-        console.log(oldSortType, currentSortType);
         if (evt.target.dataset.sortType !== currentSortType) {
           currentSortType = evt.target.dataset.sortType;
           this._setCheckedOnSorting(currentSortType, oldSortType);
@@ -65,6 +64,7 @@ export default class Sorting extends AllMighty {
   _setCheckedOnSorting(currentSortType, oldSortType) {
     this.getElement().querySelector(`input[value=sort-${currentSortType}]`).setAttribute(`checked`, ``);
     if (oldSortType !== null) {
-    this.getElement().querySelector(`input[value=sort-${oldSortType}]`).removeAttribute(`checked`);}
+      this.getElement().querySelector(`input[value=sort-${oldSortType}]`).removeAttribute(`checked`);
+    }
   }
 }

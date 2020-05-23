@@ -245,7 +245,7 @@ export default class EditTripEvent extends AllMightySmarty {
 
   _applyFlatpickr() {
     if (this._flatpickr) {
-      this._flatpickr.destroy();
+      this._flatpickr.remove();
       this._flatpickr = null;
     }
     const calendarInputs = this.getElement().querySelectorAll(`.event__input--time`);

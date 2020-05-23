@@ -27,7 +27,7 @@ export default class TripController {
     const sortTripEventsByType = (evt) => {
       let tripDaysList = this._container.querySelector(`.trip-days`);
       tripDaysList.innerHTML = ``;
-      const sortedTripEventsMocks = this._sortTripEvents(evt, this._eventModel.getData());
+      const sortedTripEventsMocks = this._sortTripEvents(evt, this._eventModel.getFilteredData());
       const tripDay = new TripDayDetails(null, 0);
       tripDay.getElement().querySelector(`div`).innerHTML = ``;
       renderComponent(Position.BEFOREEND, tripDay, tripDaysList);
@@ -57,7 +57,7 @@ export default class TripController {
     tripDaysList.innerHTML = ``;
     let listCounter = 1;
     const days = [];
-    const data = this._eventModel.getData();
+    const data = this._eventModel.getFilteredData();
 
     data.forEach((eventData, index) => {
       let {startDateWithDash} = returnEventDates(data[index].startDate, data[index].endDate);
@@ -90,7 +90,6 @@ export default class TripController {
       this._eventModel.addData(newTripEventData);
       this._renderTripDays();
     } else {
-      console.log(oldTripEventData, newTripEventData);
       this._eventModel.updateData(oldTripEventData.id, newTripEventData);
       EventController.render(newTripEventData);
     }
@@ -102,7 +101,7 @@ export default class TripController {
 
   _onFilterChange() {
     this._renderTripDays();
-    this._sortTripEvents(`event`, this._eventModel.getData());
+    this._sortTripEvents(`event`, this._eventModel.getFilteredData());
   }
 
   _sortTripEvents(sortType, eventDatas) {
@@ -129,4 +128,13 @@ export default class TripController {
     return sortedEventMocks;
   }
 
+  display() {
+    this._container.querySelector(`.trip-events`).classList.add(`displayed`);
+    this._container.querySelector(`.trip-events`).classList.remove(`hidden`);
+  }
+
+  hide() {
+    this._container.querySelector(`.trip-events`).classList.add(`hidden`);
+    this._container.querySelector(`.trip-events`).classList.remove(`displayed`);
+  }
 }
