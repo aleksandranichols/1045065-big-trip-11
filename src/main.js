@@ -1,6 +1,7 @@
 import Navigation from './components/navigation.js';
-import Filters from './components/filters.js';
 import NoTripEvents from './components/no-trip-events.js';
+import TripEvents from './models/events.js';
+import FiltersController from './controllers/filters.js';
 import TripController from './controllers/trip.js';
 import {renderComponent} from './utils/render.js';
 import {generateTripEventMocks} from './mocks/event.js';
@@ -10,17 +11,18 @@ const tripControlsMenuHeading = document.querySelector(`.trip-controls h2:first-
 const tripControlsFiltersHeading = document.querySelector(`.trip-controls h2:last-of-type`);
 
 renderComponent(Position.AFTEREND, new Navigation(), tripControlsMenuHeading);
-renderComponent(Position.AFTEREND, new Filters(), tripControlsFiltersHeading);
 
 const tripList = document.querySelector(`.trip-events`);
 const body = document.querySelector(`.page-body`);
 
 const renderATrip = (numberOfEvents) => {
+  const tripEvents = generateTripEventMocks(numberOfEvents);
+  const tripEventsComponent = new TripEvents(tripEvents);
+  new FiltersController(tripControlsFiltersHeading, tripEventsComponent).render();
   if (numberOfEvents === 0) {
     renderComponent(Position.BEFOREEND, new NoTripEvents(), tripList);
   } else {
-    const tripEvents = generateTripEventMocks(numberOfEvents);
-    new TripController(body, tripEvents).render();
+    new TripController(body, tripEventsComponent).render();
   }
 };
 

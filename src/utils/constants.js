@@ -23,7 +23,13 @@ export const Position = {
 };
 
 export const SortType = {
-  DEFAULT: `default`,
+  EVENT: `event`,
   PRICE: `price`,
   TIME: `time`
+};
+
+export const FilterType = {
+  DEFAULT: `default`,
+  FUTURE: `future`,
+  PAST: `past`
 };

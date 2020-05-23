@@ -30,8 +30,8 @@ const generateTripEvent = () => {
   const randomOffer = returnRandomElementInArray(existingOffers);
   return {
     price: getRandomIntegerInRange(EventPrice.MIN, EventPrice.MAX),
-    startDate: `2019-07-10T22:55:56.845Z`,
-    endDate: `2019-07-11T11:22:13.375Z`,
+    startDate: `2020-07-10T22:55:56.845Z`,
+    endDate: `2020-07-11T11:22:13.375Z`,
     destination: {
       description: returnRandomDescription(),
       name: randomCity,
@@ -42,7 +42,7 @@ const generateTripEvent = () => {
         }
       ]
     },
-    id: 0,
+    id: Math.random(),
     isFavorite: false,
     offers: randomOffer,
     type: addArticleToEventType(randomOffer.type, TYPES),

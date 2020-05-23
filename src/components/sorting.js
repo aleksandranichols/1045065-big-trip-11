@@ -7,7 +7,7 @@ const returnSorting = () => {
 
     <div class="trip-sort__item  trip-sort__item--event">
       <input id="sort-event" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-event" checked>
-      <label class="trip-sort__btn" for="sort-event" data-sort-type="${SortType.DEFAULT}">Event</label>
+      <label class="trip-sort__btn" for="sort-event" data-sort-type="${SortType.EVENT}">Event</label>
     </div>
 
     <div class="trip-sort__item  trip-sort__item--time">
@@ -37,22 +37,34 @@ const returnSorting = () => {
 export default class Sorting extends AllMighty {
   constructor() {
     super();
-    this._currentSortType = SortType.DEFAULT;
+    this._currentSortType = SortType.EVENT;
+    this._oldSortType = null;
+    this._setCheckedOnSorting(this._currentSortType, this._oldSortType);
   }
-
   getTemplate() {
     return returnSorting();
   }
 
   setClickHandler(handler) {
     let currentSortType = this._currentSortType;
+    let oldSortType = this._oldSortType;
     this.getElement().querySelectorAll(`.trip-sort__btn`).forEach((sortButton) => {
       sortButton.addEventListener(`click`, (evt) => {
         if (evt.target.dataset.sortType !== currentSortType) {
           currentSortType = evt.target.dataset.sortType;
+          this._setCheckedOnSorting(currentSortType, oldSortType);
           handler(currentSortType);
+          oldSortType = currentSortType;
+
         }
       });
     });
+  }
+
+  _setCheckedOnSorting(currentSortType, oldSortType) {
+    this.getElement().querySelector(`input[value=sort-${currentSortType}]`).setAttribute(`checked`, ``);
+    if (oldSortType !== null) {
+      this.getElement().querySelector(`input[value=sort-${oldSortType}]`).removeAttribute(`checked`);
+    }
   }
 }
