@@ -12,14 +12,27 @@ export default class TripEventController {
     this.editTripEvent = null;
   }
 
-  render(eventMock) {
-    this.tripEvent = new TripEvent(eventMock);
-    this.editTripEvent = new EditTripEvent(eventMock);
+  render(data) {
+    this.tripEvent = new TripEvent(data);
+    this.editTripEvent = new EditTripEvent(data);
     renderComponent(Position.BEFOREEND, this.tripEvent, this._container);
-    this._addEventHandlers(this.tripEvent, this.editTripEvent, eventMock);
+    this._addEventHandlers(this.tripEvent, this.editTripEvent, data);
   }
 
-  _addEventHandlers(tripEvent, editTripEvent, eventMock) {
+  setDefaultView() {
+    if (document.contains(this.editTripEvent.getElement())) {
+      toggleComponents(this.editTripEvent, this.tripEvent);
+    }
+  }
+
+  createNewEvent(data) {
+    this.tripEvent = new TripEvent(data);
+    this.editTripEvent = new EditTripEvent(data);
+    renderComponent(Position.BEFOREEND, this.editTripEvent, this._container);
+    this._addEventHandlers(this.tripEvent, this.editTripEvent, data);
+  }
+
+  _addEventHandlers(tripEvent, editTripEvent, data) {
     const onEscKey = (evt) => {
       if (evt.key === `Esc` || evt.key === `Escape`) {
         toggleComponents(editTripEvent, tripEvent);
@@ -35,21 +48,16 @@ export default class TripEventController {
 
     editTripEvent.setSubmitHandler((evt) => {
       evt.preventDefault();
+      this._onDataChange(this, data, Object.assign({}, data, {isFavorite: !data.isFavorite}));
       toggleComponents(editTripEvent, tripEvent);
     });
 
     editTripEvent.setClickOnFavHandler(() => {
-      this._onDataChange(this, eventMock, Object.assign({}, eventMock, {isFavorite: !eventMock.isFavorite}));
+      this._onDataChange(this, data, Object.assign({}, data, {isFavorite: !data.isFavorite}));
     });
 
     editTripEvent.setClickOnDelHandler(() => {
-      this._onDataChange(this, eventMock, null);
+      this._onDataChange(this, data, null);
     });
-  }
-
-  setDefaultView() {
-    if (document.contains(this.editTripEvent.getElement())) {
-      toggleComponents(this.editTripEvent, this.tripEvent);
-    }
   }
 }
