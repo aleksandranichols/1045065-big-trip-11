@@ -1,7 +1,8 @@
+import Sorting from '../components/sorting.js';
 import TripEventController from './event.js';
+import NewEventButton from '../components/new-event.js';
 import TripInfo from '../components/tripinfo.js';
 import TripCost from '../components/tripcost.js';
-import Sorting from '../components/sorting.js';
 import TripList from '../components/trip-days.js';
 import TripDayDetails from '../components/trip-day-details.js';
 import {renderComponent} from '../utils/render.js';
@@ -11,6 +12,7 @@ import {returnEventDates} from '../utils/event-helpers.js';
 export default class TripController {
   constructor(container, eventModel) {
     this._sorting = new Sorting();
+    this._newEventButton = new NewEventButton();
     this._container = container;
     this._eventModel = eventModel;
     this._tripEvents = [];
@@ -19,11 +21,13 @@ export default class TripController {
     this._onFilterChange = this._onFilterChange.bind(this);
     this._eventModel.setFilterChangeHandler(this._onFilterChange);
     this._eventModel.setDataChangeHandler(this._onDataChange);
+    this._renderNewEventButton();
   }
 
   render() {
     this._renderTripDetails();
     this._renderTripDays();
+
     const sortTripEventsByType = (evt) => {
       let tripDaysList = this._container.querySelector(`.trip-days`);
       tripDaysList.innerHTML = ``;
@@ -40,6 +44,34 @@ export default class TripController {
     };
 
     this._sorting.setClickHandler(sortTripEventsByType);
+  }
+
+  display() {
+    this._container.querySelector(`.trip-events`).classList.add(`displayed`);
+    this._container.querySelector(`.trip-events`).classList.remove(`hidden`);
+  }
+
+  hide() {
+    this._container.querySelector(`.trip-events`).classList.add(`hidden`);
+    this._container.querySelector(`.trip-events`).classList.remove(`displayed`);
+  }
+
+  _createNewEvent() {
+    this._newEventButton.setClickOnNewEventHandler(() => {
+      const tripDay = new TripDayDetails(null, ``);
+      const tripDaysList = this._container.querySelector(`.trip-days`);
+      const tripDayList = tripDay.getElement().querySelector(`.trip-events__list`);
+      renderComponent(Position.AFTERBEGIN, tripDay, tripDaysList);
+      const tripEventController = new TripEventController(tripDayList, this._onDataChange, this._onViewChange);
+      tripEventController.createNewEvent(this._eventModel.getData()[0]);
+      this._newEventButton.getElement().setAttribute(`disabled`, ``);
+    });
+  }
+
+  _renderNewEventButton() {
+    const main = this._container.querySelector(`.trip-main`);
+    renderComponent(Position.BEFOREEND, this._newEventButton, main);
+    this._createNewEvent(this._newEventButton);
   }
 
   _renderTripDetails() {
@@ -82,7 +114,7 @@ export default class TripController {
     });
   }
 
-  _onDataChange(EventController, oldTripEventData, newTripEventData) {
+  _onDataChange(tripEventController, oldTripEventData, newTripEventData) {
     if (newTripEventData === null) {
       this._eventModel.removeData(oldTripEventData.id);
       this._renderTripDays();
@@ -91,7 +123,6 @@ export default class TripController {
       this._renderTripDays();
     } else {
       this._eventModel.updateData(oldTripEventData.id, newTripEventData);
-      EventController.render(newTripEventData);
     }
   }
 
@@ -126,15 +157,5 @@ export default class TripController {
         throw new Error(`Switch case doesn't exist at sortTripEvents`);
     }
     return sortedEventMocks;
-  }
-
-  display() {
-    this._container.querySelector(`.trip-events`).classList.add(`displayed`);
-    this._container.querySelector(`.trip-events`).classList.remove(`hidden`);
-  }
-
-  hide() {
-    this._container.querySelector(`.trip-events`).classList.add(`hidden`);
-    this._container.querySelector(`.trip-events`).classList.remove(`displayed`);
   }
 }

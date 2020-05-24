@@ -25,3 +25,25 @@ export const addArticleToEventType = (eventType, allEventTypes) => {
     : `to`;
   return `${eventType} ${article}`;
 };
+
+export const calculatePriceByEventType = (tripEvents, type) => {
+  const totalPrice = tripEvents.filter((tripEvent) => tripEvent.type === type).
+  map((tripEvent) => tripEvent.price).
+  reduce((accumulator, tripEvent) => accumulator + tripEvent, 0);
+  return totalPrice;
+};
+
+export const calculateEventTypeOccurrence = (tripEvents, type) => {
+  const filteredTripEvents = tripEvents.filter((tripEvent) => tripEvent.type === type);
+  return filteredTripEvents.length;
+};
+
+export const calculateEventTimeSpend = (tripEvents, type) => {
+  let totalTimeSpend = 0;
+  tripEvents.filter((tripEvent) => tripEvent.type === type).
+  forEach((tripEvent) => {
+    let {durationDiff} = returnEventDates(tripEvent.startDate, tripEvent.endDate);
+    totalTimeSpend += durationDiff.hours();
+  });
+  return totalTimeSpend;
+};

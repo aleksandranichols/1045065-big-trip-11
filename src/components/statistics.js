@@ -1,33 +1,7 @@
-import {returnEventDates} from '../utils/event-helpers.js';
+import {calculatePriceByEventType, calculateEventTypeOccurrence, calculateEventTimeSpend} from '../utils/event-helpers.js';
 import AllMighty from './allmighty.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-
-const calculatePriceByEventType = (tripEvents, type) => {
-  let totalPrice = 0;
-  tripEvents.filter((tripEvent) => tripEvent.type === type).
-  forEach((tripEvent) => {
-    totalPrice = totalPrice + tripEvent.price;
-  });
-  return totalPrice;
-};
-
-const calculateEventTypeOccurrence = (tripEvents, type) => {
-  let totalNumberOfOccurrences = 0;
-  tripEvents.filter((tripEvent) => tripEvent.type === type).
-  forEach(() => totalNumberOfOccurrences++);
-  return totalNumberOfOccurrences;
-};
-
-const calculateEventTimeSpend = (tripEvents, type) => {
-  let totalTimeSpend = 0;
-  tripEvents.filter((tripEvent) => tripEvent.type === type).
-  forEach((tripEvent) => {
-    let {durationDiff} = returnEventDates(tripEvent.startDate, tripEvent.endDate);
-    totalTimeSpend += durationDiff.hours();
-  });
-  return totalTimeSpend;
-};
 
 const getStatisticsData = (tripEvents) => {
   const totalPrices = [calculatePriceByEventType(tripEvents, `Flight to`), calculatePriceByEventType(tripEvents, `Check-in in`),
