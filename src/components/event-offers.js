@@ -1,5 +1,5 @@
 import AllMighty from './allmighty.js';
-import {OFFER_NAMES} from '../utils/constants.js';
+import {splitAString} from '../utils/general.js';
 
 const returnOfferMarkUp = (title, price) => {
   return (`<li class="event__offer">
@@ -21,22 +21,29 @@ const returnOfferMarkUpOnEdit = (title, name, price) => {
 };
 
 const returnEventOffers = (offers) => {
-  let {titles, prices} = offers;
   const offersMarkUp = [];
-  titles.forEach((title, index) => {
-    offersMarkUp.push(returnOfferMarkUp(title, prices[index]));
-  });
+  offers.forEach((offer) => offersMarkUp.push(returnOfferMarkUp(offer.title, offer.price)));
   return (`<ul class="event__selected-offers">${offersMarkUp.join(`\n`)}</ul>`);
 };
 
 
 const returnEventOffersOnEdit = (offers) => {
-  let {titles, prices} = offers;
-  const offersMarkUp = [];
-  titles.forEach((title, index) => {
-    offersMarkUp.push(returnOfferMarkUpOnEdit(title, OFFER_NAMES[index], prices[index]));
-  });
-  return (`<div class="event__available-offers">${offersMarkUp.join(`\n`)}</div>`);
+  let markUp = ``;
+  if (offers.length !== 0) {
+    const offersMarkUp = [];
+    offers.forEach((offer) => {
+      const splitOfferTitle = splitAString(offer.title, ` `);
+      const offerName = `${splitOfferTitle[splitOfferTitle.length - 2]}-${splitOfferTitle[splitOfferTitle.length - 1]}`;
+      offersMarkUp.push(returnOfferMarkUpOnEdit(offer.title, offerName, offer.price));
+    });
+    markUp = `<section class="event__section  event__section--offers">
+    <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+    <div class="event__available-offers">${offersMarkUp.join(`\n`)}</div>
+    </section>`;
+  } else {
+    markUp = ``;
+  }
+  return markUp;
 };
 
 export default class EventOffers extends AllMighty {

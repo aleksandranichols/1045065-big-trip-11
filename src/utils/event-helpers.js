@@ -5,8 +5,8 @@ export const returnEventDates = (dateFrom, dateTo) => {
   const endDate = moment(dateTo);
   const startDateWithDash = startDate.format(`YYYY-MM-DD`);
   const endDateWithDash = endDate.format(`YYYY-MM-DD`);
-  const startDateWithSlash = startDate.format(`YYYY/MM/DD`);
-  const endDateWithSlash = endDate.format(`YYYY/MM/DD`);
+  const startDateWithSlash = startDate.format(`DD/MM/YY`);
+  const endDateWithSlash = endDate.format(`DD/MM/YY`);
   const startTime = startDate.format(`HH:mm`);
   const endTime = endDate.format(`HH:mm`);
   const shortDate = startDate.format(`MMM DD`);

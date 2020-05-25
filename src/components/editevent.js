@@ -1,20 +1,37 @@
 import AllMightySmarty from './allmightysmarty.js';
 import EventOffers from './event-offers.js';
-import {TYPES, CITIES} from '../utils/constants';
+import API from '../api.js';
 import {addArticleToEventType, returnEventDates} from '../utils/event-helpers';
 import {splitAString} from '../utils/general.js';
-import {existingOffers} from '../mocks/event.js';
+import {AUTHORIZATION_TOKEN, TYPES} from '../utils/constants.js';
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
-const returnCitiesMarkUp = () => CITIES.map((city) => `<option value="${city}"></option>`).join(`\n`);
+const availableDestinations = [];
+const availableOffers = [];
+
+new API(AUTHORIZATION_TOKEN).getDestinations()
+.then((destinations) => {
+  return availableDestinations.push(...destinations);
+});
+
+new API(AUTHORIZATION_TOKEN).getOffers()
+.then((offers) => {
+  return availableOffers.push(...offers);
+});
+
+const returnCitiesMarkUp = () => availableDestinations.map((destination) => `<option value="${destination.name}"></option>`).join(`\n`);
 
 const returnEditEvent = (tripEvent) => {
   let {startDateWithSlash, endDateWithSlash, startTime, endTime} = returnEventDates(tripEvent.startDate, tripEvent.endDate);
   let {description, pictures, name} = tripEvent.destination;
-  const eventIcon = splitAString(tripEvent.type.toLowerCase(), ` `);
+  let type = tripEvent.type;
+  const eventIcon = splitAString(type, ` `);
+  type = addArticleToEventType(type.charAt(0).toUpperCase() + type.slice(1), TYPES);
   const isFavorite = tripEvent.isFavorite === false ? `` : `checked`;
   const eventOffers = new EventOffers(tripEvent.offers).getEventTemplateOnEdit();
+
+  const returnPicturesMarkUp = () => pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join(`\n`);
 
   return `<li class="trip-events__item">
   <form class="event  event--edit" action="#" method="post">
@@ -89,9 +106,9 @@ const returnEditEvent = (tripEvent) => {
 
       <div class="event__field-group  event__field-group--destination">
         <label class="event__label  event__type-output" for="event-destination-1">
-          ${tripEvent.type}
+          ${type}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${tripEvent.city}" list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1">
         <datalist id="destination-list-1">
           ${returnCitiesMarkUp()}
         </datalist>
@@ -134,17 +151,13 @@ const returnEditEvent = (tripEvent) => {
     </header>
 
     <section class="event__details">
-      <section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
         ${eventOffers}
-      </section>
       <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">${name}</h3>
         <p class="event__destination-description">${description}</p>
         <div class="event__photos-container">
           <div class="event__photos-tape">
-            <img class="event__photo" src="${pictures[0].src}" alt="${pictures[0].description}">
-            <img class="event__photo" src="${pictures[0].src}" alt="${pictures[0].description}">
+            ${returnPicturesMarkUp()}
           </div>
         </div>
       </section>
@@ -209,7 +222,7 @@ export default class EditTripEvent extends AllMightySmarty {
   _setDestinationInputHandler() {
     const destinationInput = this.getElement().querySelector(`.event__input--destination`);
     destinationInput.addEventListener(`input`, (evt) => {
-      if (CITIES.find((city) => city === evt.target.value)) {
+      if (availableDestinations.some((destination) => destination.name === evt.target.value)) {
         return;
       } else {
         evt.target.value = ``;
@@ -224,9 +237,9 @@ export default class EditTripEvent extends AllMightySmarty {
   _changeType() {
     const allEventsLabels = this.getElement().querySelectorAll(`.event__type-label`);
     allEventsLabels.forEach((label) => label.addEventListener(`click`, () => {
-      this._tripEvent.type = addArticleToEventType(label.textContent, TYPES);
-      const currentOfferIndex = existingOffers.findIndex((offer) => offer.type === label.textContent);
-      this._tripEvent.offers = existingOffers[currentOfferIndex];
+      const currentOfferIndex = availableOffers.findIndex((offer) => offer.type === label.textContent.toLowerCase());
+      this._tripEvent.offers = availableOffers[currentOfferIndex].offers;
+      this._tripEvent.type = availableOffers[currentOfferIndex].type;
       this.rerender();
       this.recoveryListeners();
       this._setCheckedOnType();
@@ -238,6 +251,12 @@ export default class EditTripEvent extends AllMightySmarty {
     destinationInput.addEventListener(`change`, () => {
       this._tripEvent.city = destinationInput.value;
       this._tripEvent.destination.name = destinationInput.value;
+      if (destinationInput.value !== ``) {
+        const index = availableDestinations.findIndex((destination) => destination.name === destinationInput.value);
+        this._tripEvent.destination.description = availableDestinations[index].description;
+        this._tripEvent.destination.pictures = availableDestinations[index].pictures;
+      }
+
       this.rerender();
       this.recoveryListeners();
     });

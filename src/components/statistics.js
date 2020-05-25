@@ -4,15 +4,15 @@ import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const getStatisticsData = (tripEvents) => {
-  const totalPrices = [calculatePriceByEventType(tripEvents, `Flight to`), calculatePriceByEventType(tripEvents, `Check-in in`),
-    calculatePriceByEventType(tripEvents, `Drive to`), calculatePriceByEventType(tripEvents, `Sightseeing in`),
-    calculatePriceByEventType(tripEvents, `Transport to`)];
+  const totalPrices = [calculatePriceByEventType(tripEvents, `flight`), calculatePriceByEventType(tripEvents, `check-in`),
+    calculatePriceByEventType(tripEvents, `drive`), calculatePriceByEventType(tripEvents, `sightseeing`),
+    calculatePriceByEventType(tripEvents, `transport`)];
 
-  const totalNumberOfOccurrences = [calculateEventTypeOccurrence(tripEvents, `Flight to`), calculateEventTypeOccurrence(tripEvents, `Drive to`),
-    calculateEventTypeOccurrence(tripEvents, `Transport to`)];
+  const totalNumberOfOccurrences = [calculateEventTypeOccurrence(tripEvents, `flight`), calculateEventTypeOccurrence(tripEvents, `drive`),
+    calculateEventTypeOccurrence(tripEvents, `transport`)];
 
-  const totalTimeSpend = [calculateEventTimeSpend(tripEvents, `Flight to`), calculateEventTimeSpend(tripEvents, `Drive to`),
-    calculateEventTimeSpend(tripEvents, `Restaurant in`)];
+  const totalTimeSpend = [calculateEventTimeSpend(tripEvents, `flight`), calculateEventTimeSpend(tripEvents, `drive`),
+    calculateEventTimeSpend(tripEvents, `restaurant`)];
 
   return {totalPrices, totalNumberOfOccurrences, totalTimeSpend};
 };
