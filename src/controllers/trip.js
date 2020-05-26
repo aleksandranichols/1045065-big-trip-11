@@ -10,11 +10,12 @@ import {Position, SortType} from '../utils/constants.js';
 import {returnEventDates} from '../utils/event-helpers.js';
 
 export default class TripController {
-  constructor(container, eventModel) {
+  constructor(container, eventModel, api) {
     this._sorting = new Sorting();
     this._newEventButton = new NewEventButton();
     this._container = container;
     this._eventModel = eventModel;
+    this._api = api;
     this._tripEvents = [];
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
@@ -38,7 +39,7 @@ export default class TripController {
       const tripDayList = tripDay.getElement().querySelector(`.trip-events__list`);
       if (sortedTripEventsMocks) {
         sortedTripEventsMocks.forEach((sortedEventMock) => {
-          new TripEventController(tripDayList, this._onDataChange, this._onViewChange).render(sortedEventMock);
+          new TripEventController(tripDayList, sortedEventMock, this._onDataChange, this._onViewChange).render();
         });
       }
     };
@@ -62,8 +63,8 @@ export default class TripController {
       const tripDaysList = this._container.querySelector(`.trip-days`);
       const tripDayList = tripDay.getElement().querySelector(`.trip-events__list`);
       renderComponent(Position.AFTERBEGIN, tripDay, tripDaysList);
-      const tripEventController = new TripEventController(tripDayList, this._onDataChange, this._onViewChange);
-      tripEventController.createNewEvent(this._eventModel.getData()[0]);
+      const tripEventController = new TripEventController(tripDayList, this._eventModel.getEmptyEvent(), this._onDataChange, this._onViewChange);
+      tripEventController.createNewEvent();
       this._newEventButton.getElement().setAttribute(`disabled`, ``);
     });
   }
@@ -97,8 +98,8 @@ export default class TripController {
 
       if (tripDay !== null && days.some((day) => day.startDateWithDash === startDateWithDash)) {
         const tripDayList = tripDay.querySelector(`.trip-events__list`);
-        const tripEvent = new TripEventController(tripDayList, this._onDataChange, this._onViewChange);
-        tripEvent.render(eventData);
+        const tripEvent = new TripEventController(tripDayList, eventData, this._onDataChange, this._onViewChange);
+        tripEvent.render();
         this._tripEvents.push(tripEvent);
       } else {
         tripDay = new TripDayDetails(data[index], listCounter);
@@ -106,8 +107,8 @@ export default class TripController {
         renderComponent(Position.BEFOREEND, tripDay, tripDaysList);
         tripDay.getElement().classList.add(`day-${listCounter}`);
         days.push({listCounter, startDateWithDash});
-        const tripEvent = new TripEventController(tripDayList, this._onDataChange, this._onViewChange);
-        tripEvent.render(eventData);
+        const tripEvent = new TripEventController(tripDayList, eventData, this._onDataChange, this._onViewChange);
+        tripEvent.render();
         this._tripEvents.push(tripEvent);
         listCounter++;
       }
@@ -116,13 +117,22 @@ export default class TripController {
 
   _onDataChange(tripEventController, oldTripEventData, newTripEventData) {
     if (newTripEventData === null) {
-      this._eventModel.removeData(oldTripEventData.id);
-      this._renderTripDays();
+      this._api.deleteEvent(oldTripEventData.id)
+      .then(() => {
+        this._eventModel.removeData(oldTripEventData.id);
+        this._renderTripDays();
+      });
     } else if (oldTripEventData === null) {
       this._eventModel.addData(newTripEventData);
       this._renderTripDays();
     } else {
-      this._eventModel.updateData(oldTripEventData.id, newTripEventData);
+      this._api.updateEvent(oldTripEventData.id, newTripEventData)
+      .then((eventModel) => {
+        const isSuccess = this._eventModel.updateData(oldTripEventData.id, eventModel);
+        if (isSuccess) {
+          this._renderTripDays();
+        }
+      });
     }
   }
 
@@ -135,8 +145,8 @@ export default class TripController {
     this._sortTripEvents(`event`, this._eventModel.getFilteredData());
   }
 
-  _sortTripEvents(sortType, eventDatas) {
-    let sortedEventMocks = eventDatas.slice();
+  _sortTripEvents(sortType, eventData) {
+    let sortedEventMocks = eventData.slice();
     switch (sortType) {
       case SortType.EVENT:
         this._renderTripDays();

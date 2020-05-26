@@ -23,7 +23,7 @@ api.getEvents()
 .then((events) => {
   renderComponent(Position.AFTERBEGIN, statistics, bodyContainer);
   const tripEventsModel = new TripEvents(events);
-  const tripController = new TripController(body, tripEventsModel);
+  const tripController = new TripController(body, tripEventsModel, api);
   new FiltersController(tripControlsFiltersHeading, tripEventsModel).render();
   tripController.render();
 

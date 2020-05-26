@@ -2,14 +2,14 @@ import AllMighty from './allmighty.js';
 import EventOffers from './event-offers.js';
 import {returnEventDates, addArticleToEventType} from '../utils/event-helpers.js';
 import {splitAString} from '../utils/general.js';
-import {TYPES, MAX_OFFERS_TO_SHOW} from '../utils/constants.js';
+import {TRANSPORT_TYPES, MAX_OFFERS_TO_SHOW} from '../utils/constants.js';
 
 const returnEvent = (tripEvent) => {
   let {startDateWithDash, endDateWithDash, startTime, endTime, duration} = returnEventDates(tripEvent.startDate, tripEvent.endDate);
   let {name} = tripEvent.destination;
   let type = tripEvent.type;
   const eventIcon = splitAString(type, ` `);
-  type = addArticleToEventType(type.charAt(0).toUpperCase() + type.slice(1), TYPES);
+  type = addArticleToEventType(type.charAt(0).toUpperCase() + type.slice(1), TRANSPORT_TYPES);
   const eventOffers = new EventOffers(tripEvent.offers.slice(0, MAX_OFFERS_TO_SHOW)).getEventTemplate();
 
   return `<li class="trip-events__item">

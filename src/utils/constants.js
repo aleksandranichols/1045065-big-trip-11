@@ -1,4 +1,6 @@
-export const TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
+export const TRANSPORT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
+export const ACTIVITY_TYPES = [`Check-in`, `Sightseeing`, `Restaurant`];
+export const TYPES = [].concat(TRANSPORT_TYPES, ACTIVITY_TYPES);
 export const MAX_OFFERS_TO_SHOW = 3;
 
 // Pretend that we have authorization
@@ -25,4 +27,16 @@ export const FilterType = {
 export const Page = {
   TABLE: `table`,
   STATS: `stats`,
+};
+
+export const DefaultData = {
+  DELETE: `Delete`,
+  SAVE: `Save`,
+};
+
+export const Method = {
+  GET: `GET`,
+  POST: `POST`,
+  PUT: `PUT`,
+  DELETE: `DELETE`
 };

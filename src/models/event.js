@@ -1,4 +1,4 @@
-export default class TripEvent {
+export default class TripEventModel {
   constructor(data) {
     this.price = data[`base_price`];
     this.startDate = data[`date_from`];
@@ -23,14 +23,14 @@ export default class TripEvent {
   }
 
   static parseEvent(data) {
-    return new TripEvent(data);
+    return new TripEventModel(data);
   }
 
   static parseEvents(data) {
-    return data.map(TripEvent.parseEvent);
+    return data.map(TripEventModel.parseEvent);
   }
 
   static clone(data) {
-    return new TripEvent(data.toRAW());
+    return new TripEventModel(data.toRAW());
   }
 }

@@ -3,7 +3,7 @@ import EventOffers from './event-offers.js';
 import API from '../api.js';
 import {addArticleToEventType, returnEventDates} from '../utils/event-helpers';
 import {splitAString} from '../utils/general.js';
-import {AUTHORIZATION_TOKEN, TYPES} from '../utils/constants.js';
+import {DefaultData, AUTHORIZATION_TOKEN, TRANSPORT_TYPES, ACTIVITY_TYPES} from '../utils/constants.js';
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
@@ -21,17 +21,27 @@ new API(AUTHORIZATION_TOKEN).getOffers()
 });
 
 const returnCitiesMarkUp = () => availableDestinations.map((destination) => `<option value="${destination.name}"></option>`).join(`\n`);
+const returnTripEventTransportTypesMarkup = () => TRANSPORT_TYPES.map((type) => `<div class="event__type-item">
+  <input id="event-type-${type.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.toLowerCase()}">
+  <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type.toLowerCase()}-1">${type}</label>
+</div>`).join(`\n`);
+
+const returnTripEventActivityTypesMarkup = () => ACTIVITY_TYPES.map((type) => `<div class="event__type-item">
+    <input id="event-type-${type.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.toLowerCase()}">
+    <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type.toLowerCase()}-1">${type}</label>
+  </div>`).join(`\n`);
 
 const returnEditEvent = (tripEvent) => {
   let {startDateWithSlash, endDateWithSlash, startTime, endTime} = returnEventDates(tripEvent.startDate, tripEvent.endDate);
   let {description, pictures, name} = tripEvent.destination;
   let type = tripEvent.type;
-  const eventIcon = splitAString(type, ` `);
-  type = addArticleToEventType(type.charAt(0).toUpperCase() + type.slice(1), TYPES);
+  const eventIcon = `img/icons/${splitAString(type, ` `)[0]}.png`;
+  type = addArticleToEventType(type.charAt(0).toUpperCase() + type.slice(1), TRANSPORT_TYPES);
   const isFavorite = tripEvent.isFavorite === false ? `` : `checked`;
   const eventOffers = new EventOffers(tripEvent.offers).getEventTemplateOnEdit();
 
   const returnPicturesMarkUp = () => pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join(`\n`);
+
 
   return `<li class="trip-events__item">
   <form class="event  event--edit" action="#" method="post">
@@ -39,67 +49,19 @@ const returnEditEvent = (tripEvent) => {
       <div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle-1">
           <span class="visually-hidden">Choose event type</span>
-          <img class="event__type-icon" width="17" height="17" src="img/icons/${eventIcon[0]}.png" alt="Event type icon">
+          <img class="event__type-icon" width="17" height="17" src="${eventIcon}" alt="Event type icon">
         </label>
         <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
         <div class="event__type-list">
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Transfer</legend>
-
-            <div class="event__type-item">
-              <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-              <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus">
-              <label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train">
-              <label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
-              <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-transport-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="transport">
-              <label class="event__type-label  event__type-label--transport" for="event-type-transport-1">Transport</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
-              <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight">
-              <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
-            </div>
+            ${returnTripEventTransportTypesMarkup()}
           </fieldset>
 
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Activity</legend>
-
-            <div class="event__type-item">
-              <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
-              <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
-              <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant" >
-              <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
-            </div>
+            ${returnTripEventActivityTypesMarkup()}
           </fieldset>
         </div>
       </div>
@@ -178,12 +140,28 @@ export default class EditTripEvent extends AllMightySmarty {
     this._changeDestination();
     this._applyFlatpickr();
     this._setCheckedOnType();
+    this._setCheckedOnOffer();
     this._setPriceInputHandler();
     this._setDestinationInputHandler();
   }
 
   getTemplate() {
     return returnEditEvent(this._tripEvent);
+  }
+
+  getData() {
+    const form = this.getElement().querySelector(`form`);
+    return new FormData(form);
+  }
+
+  setData(data) {
+    this._externalData = Object.assign({}, DefaultData, data);
+    this.rerender();
+  }
+
+  reset() {
+    const form = this.getElement().querySelector(`form`);
+    form.reset();
   }
 
   recoveryListeners() {
@@ -198,7 +176,7 @@ export default class EditTripEvent extends AllMightySmarty {
   }
 
   setSubmitHandler(handler) {
-    this.getElement().addEventListener(`submit`, handler);
+    this.getElement().querySelector(`form`).addEventListener(`submit`, handler);
     this._submitHandler = handler;
   }
 
@@ -231,7 +209,15 @@ export default class EditTripEvent extends AllMightySmarty {
   }
 
   _setCheckedOnType() {
-    this.getElement().querySelector(`input[value=${splitAString(this._tripEvent.type.toLowerCase(), ` `)[0].toLowerCase()}]`).setAttribute(`checked`, ``);
+    if (this._tripEvent.type !== ``) {
+      this.getElement().querySelector(`input[value=${this._tripEvent.type}]`).setAttribute(`checked`, ``);
+    }
+  }
+
+  _setCheckedOnOffer() {
+    this.getElement().querySelectorAll(`.event__offer-checkbox`).forEach((label) => label.addEventListener(`click`, (evt) => {
+      evt.target.toggleAttribute(`checked`);
+    }));
   }
 
   _changeType() {
@@ -273,7 +259,15 @@ export default class EditTripEvent extends AllMightySmarty {
       allowInput: true,
       enableTime: true,
       time_24hr: true,
-      dateFormat: `d/m/y H:i`
+      dateFormat: `d/m/y H:i`,
+      onValueUpdate: function(selectedDates, dateStr, instance) {
+        instance.element.setCustomValidity(``);
+        const startDate = calendarInputs[0];
+        const endDate = calendarInputs[1];
+        if (startDate.value > endDate.value) {
+          instance.element.setCustomValidity(`End date can't be before the start date`);
+        }
+    },
     }));
     /* eslint-enable */
   }

@@ -18,11 +18,8 @@ export const returnEventDates = (dateFrom, dateTo) => {
     startTime, endTime, durationDiff, duration};
 };
 
-export const addArticleToEventType = (eventType, allEventTypes) => {
-  const LAST_INDEX_OF_TRANSPORT_EVENT = 6;
-  const article = allEventTypes.indexOf(eventType) > LAST_INDEX_OF_TRANSPORT_EVENT
-    ? `in`
-    : `to`;
+export const addArticleToEventType = (eventType, transportTypes) => {
+  const article = transportTypes.some((type) => type === eventType) === true ? `to` : `in`;
   return `${eventType} ${article}`;
 };
 
