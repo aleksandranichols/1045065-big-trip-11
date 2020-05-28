@@ -1,9 +1,19 @@
-import AllMighty from './allmighty.js';
+import AllMightySmarty from './allmightysmarty.js';
 
-const noTripEvents = () => (`<p class="trip-events__msg">Click New Event to create your first point</p>`);
+const noTripEvents = (message) => (`<p class="trip-events__msg">${message}</p>`);
 
-export default class NoTripEvents extends AllMighty {
+export default class NoTripEvents extends AllMightySmarty {
+  constructor() {
+    super();
+    this._message = `Loading...`;
+  }
+
   getTemplate() {
-    return noTripEvents();
+    return noTripEvents(this._message);
+  }
+
+  updateData(newMessage) {
+    this._message = newMessage;
+    this.rerender();
   }
 }

@@ -17,6 +17,8 @@ export default class AllMightySmarty extends AllMighty {
     const elementParent = oldElement.parentElement;
     this._element = this.removeElement();
     const newElement = this.getElement();
-    elementParent.replaceChild(newElement, oldElement);
+    if (elementParent !== null) {
+      elementParent.replaceChild(newElement, oldElement);
+    }
   }
 }

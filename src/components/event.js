@@ -1,7 +1,8 @@
 import AllMighty from './allmighty.js';
 import EventOffers from './event-offers.js';
-import {returnEventDates} from '../utils/event-helpers.js';
+import {returnEventDates, addArticleToEventType} from '../utils/event-helpers.js';
 import {splitAString} from '../utils/general.js';
+import {TRANSPORT_TYPES, MAX_OFFERS_TO_SHOW} from '../utils/constants.js';
 
 const returnEvent = (tripEvent) => {
   let {startDateWithDash, endDateWithDash, startTime, endTime, duration} = returnEventDates(tripEvent.startDate, tripEvent.endDate);
@@ -21,7 +22,7 @@ const returnEvent = (tripEvent) => {
     <div class="event__type">
       <img class="event__type-icon" width="42" height="42" src="img/icons/${eventIcon[0]}.png" alt="Event type icon">
     </div>
-    <h3 class="event__title">${tripEvent.type} ${tripEvent.city}</h3>
+    <h3 class="event__title">${type} ${name}</h3>
 
     <div class="event__schedule">
       <p class="event__time">

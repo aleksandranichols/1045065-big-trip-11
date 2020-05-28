@@ -17,6 +17,23 @@ export default class TripEvents {
     return this._getDataByAFilterType(this._currentFilter);
   }
 
+  getEmptyEvent() {
+    return {
+      destination: {
+        name: ``,
+        description: ``,
+        pictures: []
+      },
+      endDate: new Date(),
+      id: Math.random(),
+      isFavorite: false,
+      offers: [],
+      price: 0,
+      startDate: new Date(),
+      type: `transport`
+    };
+  }
+
   addData(newTripEventData) {
     this._tripEventData = this._tripEventData.slice();
     this._tripEventData.push(newTripEventData);

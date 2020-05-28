@@ -28,8 +28,7 @@ export default class Filters extends AllMighty {
   setClickHandler(handler) {
     this.getElement().querySelectorAll(`.trip-filters__filter-label`).forEach((filterButton) => {
       filterButton.addEventListener(`click`, (evt) => {
-        const currentFilterType = evt.target.dataset.filterType;
-        handler(currentFilterType);
+        handler(evt.target.dataset.filterType);
       }, true);
     });
   }

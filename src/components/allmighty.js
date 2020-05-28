@@ -24,4 +24,13 @@ export default class AllMighty {
     this._element = null;
   }
 
+  display() {
+    this._element.classList.add(`displayed`);
+    this._element.classList.remove(`hidden`);
+  }
+
+  hide() {
+    this._element.classList.add(`hidden`);
+    this._element.classList.remove(`displayed`);
+  }
 }

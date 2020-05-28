@@ -1,5 +1,5 @@
 import AllMighty from './allmighty.js';
-import {OFFER_NAMES} from '../utils/constants.js';
+import {splitAString} from '../utils/general.js';
 
 const returnOfferMarkUp = (title, price) => {
   return (`<li class="event__offer">
@@ -21,11 +21,8 @@ const returnOfferMarkUpOnEdit = (title, name, price) => {
 };
 
 const returnEventOffers = (offers) => {
-  let {titles, prices} = offers;
   const offersMarkUp = [];
-  titles.forEach((title, index) => {
-    offersMarkUp.push(returnOfferMarkUp(title, prices[index]));
-  });
+  offers.forEach((offer) => offersMarkUp.push(returnOfferMarkUp(offer.title, offer.price)));
   return (`<ul class="event__selected-offers">${offersMarkUp.join(`\n`)}</ul>`);
 };
 

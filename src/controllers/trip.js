@@ -1,7 +1,8 @@
+import Sorting from '../components/sorting.js';
 import TripEventController from './event.js';
+import NewEventButton from '../components/new-event.js';
 import TripInfo from '../components/tripinfo.js';
 import TripCost from '../components/tripcost.js';
-import Sorting from '../components/sorting.js';
 import TripList from '../components/trip-days.js';
 import TripDayDetails from '../components/trip-day-details.js';
 import {renderComponent} from '../utils/render.js';
@@ -11,6 +12,7 @@ import {returnEventDates} from '../utils/event-helpers.js';
 export default class TripController {
   constructor(container, eventsModel, api) {
     this._sorting = new Sorting();
+    this._newEventButton = new NewEventButton();
     this._container = container;
     this._eventsModel = eventsModel;
     this._api = api;
@@ -25,6 +27,7 @@ export default class TripController {
   render() {
     this._renderTripDetails();
     this._renderTripDays();
+
     const sortTripEventsByType = (evt) => {
       this._sortEvents(evt);
     };
@@ -40,27 +43,6 @@ export default class TripController {
   hide() {
     this._container.querySelector(`.trip-events`).classList.add(`hidden`);
     this._container.querySelector(`.trip-events`).classList.remove(`displayed`);
-  }
-
-  _renderEvents(sortType) {
-    this._renderTripDays();
-    this._sortEvents(sortType);
-    this._sorting.setClickHandler(this._sortEvents);
-  }
-
-  _sortEvents(sortType) {
-    let tripDaysList = this._container.querySelector(`.trip-days`);
-    tripDaysList.innerHTML = ``;
-    const sortedTripEventsData = this._sortTripEvents(sortType, this._eventsModel.getFilteredData());
-    const tripDay = new TripDayDetails(null, 0);
-    tripDay.getElement().querySelector(`div`).innerHTML = ``;
-    renderComponent(Position.BEFOREEND, tripDay, tripDaysList);
-    const tripDayList = tripDay.getElement().querySelector(`.trip-events__list`);
-    if (sortedTripEventsData) {
-      sortedTripEventsData.forEach((sortedEventData) => {
-        new TripEventController(tripDayList, sortedEventData, this._onDataChange, this._onViewChange).render();
-      });
-    }
   }
 
   createNewEvent(newEventButton, tripEventModel) {
@@ -86,6 +68,27 @@ export default class TripController {
     });
   }
 
+  _renderEvents(sortType) {
+    this._renderTripDays();
+    this._sortEvents(sortType);
+    this._sorting.setClickHandler(this._sortEvents);
+  }
+
+  _sortEvents(sortType) {
+    let tripDaysList = this._container.querySelector(`.trip-days`);
+    tripDaysList.innerHTML = ``;
+    const sortedTripEventsData = this._sortTripEvents(sortType, this._eventsModel.getFilteredData());
+    const tripDay = new TripDayDetails(null, 0);
+    tripDay.getElement().querySelector(`div`).innerHTML = ``;
+    renderComponent(Position.BEFOREEND, tripDay, tripDaysList);
+    const tripDayList = tripDay.getElement().querySelector(`.trip-events__list`);
+    if (sortedTripEventsData) {
+      sortedTripEventsData.forEach((sortedEventData) => {
+        new TripEventController(tripDayList, sortedEventData, this._onDataChange, this._onViewChange).render();
+      });
+    }
+  }
+
   _renderTripDetails() {
     const tripMain = this._container.querySelector(`.trip-main`);
     const tripEvents = this._container.querySelector(`.trip-events`);
@@ -109,8 +112,8 @@ export default class TripController {
 
       if (tripDay !== null && days.some((day) => day.startDateWithDash === startDateWithDash)) {
         const tripDayList = tripDay.querySelector(`.trip-events__list`);
-        const tripEvent = new TripEventController(tripDayList, this._onDataChange, this._onViewChange);
-        tripEvent.render(eventData);
+        const tripEvent = new TripEventController(tripDayList, eventData, this._onDataChange, this._onViewChange);
+        tripEvent.render();
         this._tripEvents.push(tripEvent);
       } else {
         tripDay = new TripDayDetails(data[index], listCounter);
@@ -118,22 +121,24 @@ export default class TripController {
         renderComponent(Position.BEFOREEND, tripDay, tripDaysList);
         tripDay.getElement().classList.add(`day-${listCounter}`);
         days.push({listCounter, startDateWithDash});
-        const tripEvent = new TripEventController(tripDayList, this._onDataChange, this._onViewChange);
-        tripEvent.render(eventData);
+        const tripEvent = new TripEventController(tripDayList, eventData, this._onDataChange, this._onViewChange);
+        tripEvent.render();
         this._tripEvents.push(tripEvent);
         listCounter++;
       }
     });
   }
 
-  _onDataChange(EventController, oldTripEventData, newTripEventData) {
+  _onDataChange(tripEventController, oldTripEventData, newTripEventData) {
     if (newTripEventData === null) {
       this._api.deleteEvent(oldTripEventData.id)
       .then(() => {
         this._eventsModel.removeData(oldTripEventData.id);
         this._renderTripDays();
       })
-      .catch((error) => error.message);
+      .catch(() => {
+        tripEventController.shake();
+      });
     } else if (oldTripEventData === null) {
       this._api.createEvent(newTripEventData)
       .then((eventModel) => {
@@ -144,7 +149,9 @@ export default class TripController {
           this._renderEvents(currentSort.getAttribute(`data-sort-type`));
         }
       })
-      .catch((error) => error.message);
+      .catch(() => {
+        tripEventController.shake();
+      });
     } else {
       this._api.updateEvent(oldTripEventData.id, newTripEventData)
       .then((eventModel) => {
@@ -154,7 +161,9 @@ export default class TripController {
           this._renderEvents(currentSort.getAttribute(`data-sort-type`));
         }
       })
-      .catch((error) => error.message);
+      .catch(() => {
+        tripEventController.shake();
+      });
     }
   }
 
@@ -190,5 +199,4 @@ export default class TripController {
     }
     return sortedEventData;
   }
-
 }
