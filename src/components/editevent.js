@@ -179,21 +179,6 @@ export default class EditTripEvent extends AllMightySmarty {
     this.getElement().querySelector(`form`).reset();
   }
 
-  getData() {
-    const form = this.getElement().querySelector(`form`);
-    return new FormData(form);
-  }
-
-  setData(data) {
-    this._externalData = Object.assign({}, DefaultData, data);
-    this.rerender();
-  }
-
-  reset() {
-    const form = this.getElement().querySelector(`form`);
-    form.reset();
-  }
-
   recoveryListeners() {
     this.setSubmitHandler(this._submitHandler);
     this.setClickOnFavHandler(this._favHandler);
