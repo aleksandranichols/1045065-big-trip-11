@@ -10,18 +10,23 @@ export default class TripEvents {
   }
 
   getData() {
+    return this._tripEventData;
+  }
+
+  getFilteredData() {
     return this._getDataByAFilterType(this._currentFilter);
   }
 
   addData(newTripEventData) {
-    this._tripEventData = [].concat(this._tripEventData.push(newTripEventData));
+    this._tripEventData = this._tripEventData.slice();
+    this._tripEventData.push(newTripEventData);
+    return true;
   }
 
   updateData(id, newTripEventData) {
     const index = this._tripEventData.findIndex((data) => data.id === id);
     this._tripEventData = [].concat(this._tripEventData.slice(0, index), newTripEventData, this._tripEventData.slice(index + 1));
-    this._callHandlers(this._dataChangeHandlers); // выдает повторный вызов функции в контроллере Trip со значением undefined
-    // верно, что при апдейте мне нужно как то данные в getData() передавать? поскольку мы тут создали новый массив
+    return true;
   }
 
   removeData(id) {

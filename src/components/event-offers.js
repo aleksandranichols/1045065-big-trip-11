@@ -31,12 +31,22 @@ const returnEventOffers = (offers) => {
 
 
 const returnEventOffersOnEdit = (offers) => {
-  let {titles, prices} = offers;
-  const offersMarkUp = [];
-  titles.forEach((title, index) => {
-    offersMarkUp.push(returnOfferMarkUpOnEdit(title, OFFER_NAMES[index], prices[index]));
-  });
-  return (`<div class="event__available-offers">${offersMarkUp.join(`\n`)}</div>`);
+  let markUp = ``;
+  if (offers.title !== `` && offers.length !== 0) {
+    const offersMarkUp = [];
+    offers.forEach((offer) => {
+      const splitOfferTitle = splitAString(offer.title, ` `);
+      const offerName = `${splitOfferTitle[splitOfferTitle.length - 2]}-${splitOfferTitle[splitOfferTitle.length - 1]}`;
+      offersMarkUp.push(returnOfferMarkUpOnEdit(offer.title, offerName, offer.price));
+    });
+    markUp = `<section class="event__section  event__section--offers">
+    <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+    <div class="event__available-offers">${offersMarkUp.join(`\n`)}</div>
+    </section>`;
+  } else {
+    markUp = ``;
+  }
+  return markUp;
 };
 
 export default class EventOffers extends AllMighty {

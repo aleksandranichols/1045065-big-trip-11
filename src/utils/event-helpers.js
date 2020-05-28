@@ -11,7 +11,7 @@ export const returnEventDates = (dateFrom, dateTo) => {
   const endTime = endDate.format(`HH:mm`);
   const shortDate = startDate.format(`MMM DD`);
   const durationDiff = moment.duration(endDate.diff(startDate));
-  let durationDays = durationDiff.days() === 0 ? `` : durationDays + `D`;
+  let durationDays = durationDiff.days() === 0 ? `` : durationDiff.days() + `D`;
   const duration = `${durationDays} ${durationDiff.hours()}H ${durationDiff.minutes()}M`;
 
   return {startDate, endDate, startDateWithDash, endDateWithDash, startDateWithSlash, endDateWithSlash, shortDate,

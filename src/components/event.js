@@ -5,8 +5,16 @@ import {splitAString} from '../utils/general.js';
 
 const returnEvent = (tripEvent) => {
   let {startDateWithDash, endDateWithDash, startTime, endTime, duration} = returnEventDates(tripEvent.startDate, tripEvent.endDate);
-  const eventIcon = splitAString(tripEvent.type.toLowerCase(), ` `);
-  const eventOffers = new EventOffers(tripEvent.offers).getEventTemplate();
+  let {name} = tripEvent.destination;
+  let type = tripEvent.type;
+  const eventIcon = splitAString(type, ` `);
+  type = addArticleToEventType(type.charAt(0).toUpperCase() + type.slice(1), TRANSPORT_TYPES);
+  let eventOffers = ``;
+  if (tripEvent.offers.title !== ``) {
+    eventOffers = new EventOffers(tripEvent.offers.slice(0, MAX_OFFERS_TO_SHOW)).getEventTemplate();
+  } else {
+    eventOffers = ``;
+  }
 
   return `<li class="trip-events__item">
   <div class="event">
