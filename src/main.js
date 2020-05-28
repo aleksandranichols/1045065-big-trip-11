@@ -75,4 +75,4 @@ api.getEvents()
     statistics.getCharts(tripEventsModel.getData());
   }
 })
-.catch((error) => error.message)
+.catch((error) => error.message);
