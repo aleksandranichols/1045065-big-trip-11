@@ -7,8 +7,8 @@ import TripEvents from './models/events.js';
 import TripEventModel from './models/event.js';
 import FiltersController from './controllers/filters.js';
 import TripController from './controllers/trip.js';
-import {renderComponent} from './utils/render.js';
-import {Position, Page, AUTHORIZATION_TOKEN} from './utils/constants.js';
+import {renderComponent, removeComponent} from './utils/render.js';
+import {Position, Page, AUTHORIZATION_TOKEN, NO_EVENTS_MESSAGE} from './utils/constants.js';
 
 const api = new API(AUTHORIZATION_TOKEN);
 
@@ -35,16 +35,19 @@ export const returnNewEvent = () => {
   };
 };
 
+const noEvents = new NoTripEvents();
+renderComponent(Position.BEFOREEND, noEvents, tripList);
 api.getEvents()
 .then((events) => {
-  if (events.length === 0) {
+  if (events.length === 0 || events === undefined) {
+    noEvents.updateData(NO_EVENTS_MESSAGE);
     const newEventButton = new NewEventButton();
     renderComponent(Position.BEFOREEND, newEventButton, main);
-    renderComponent(Position.BEFOREEND, new NoTripEvents(), tripList);
     const tripEventsModel = new TripEvents(events);
     const tripEventModel = new TripEventModel(returnNewEvent());
     new TripController(body, tripEventsModel, api).createNewEvent(newEventButton, tripEventModel);
   } else {
+    removeComponent(noEvents);
     const newEventButton = new NewEventButton();
     renderComponent(Position.BEFOREEND, newEventButton, main);
     renderComponent(Position.AFTERBEGIN, statistics, bodyContainer);

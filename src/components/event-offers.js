@@ -11,7 +11,7 @@ const returnOfferMarkUp = (title, price) => {
 
 const returnOfferMarkUpOnEdit = (title, name, price) => {
   return (`<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${name}-1" type="checkbox" name="event-offer-${name}" checked>
+    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${name}-1" type="checkbox" name="event-offer-${name}">
     <label class="event__offer-label" for="event-offer-${name}-1">
       <span class="event__offer-title">${title}</span>
       &plus;

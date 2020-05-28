@@ -16,7 +16,7 @@ const returnTripEventActivityTypesMarkup = () => ACTIVITY_TYPES.map((type) => `<
     <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type.toLowerCase()}-1">${type}</label>
   </div>`).join(`\n`);
 
-const returnEditEvent = (tripEvent, availableDestinations, availableOffers) => {
+const returnEditEvent = (tripEvent, availableDestinations, availableOffers, buttons) => {
   let {startDateWithSlash, endDateWithSlash, startTime, endTime} = returnEventDates(tripEvent.startDate, tripEvent.endDate);
   let {description, pictures, name} = tripEvent.destination;
   if (description === undefined) {
@@ -38,8 +38,9 @@ const returnEditEvent = (tripEvent, availableDestinations, availableOffers) => {
   const returnPicturesMarkUp = () => pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join(`\n`);
   const returnCitiesMarkUp = () => availableDestinations.map((destination) => `<option value="${destination.name}"></option>`).join(`\n`);
 
-  const saveButton = DefaultData.SAVE;
-  const deleteButton = DefaultData.DELETE;
+  const saveButton = buttons.SAVE;
+  const deleteButton = buttons.DELETE;
+
   return `<li class="trip-events__item">
   <form class="event  event--edit" action="#" method="post">
     <header class="event__header">
@@ -131,6 +132,7 @@ export default class EditTripEvent extends AllMightySmarty {
     this._tripEvent = tripEvent;
     this._availableDestinations = availableDestinations;
     this._availableOffers = availableOffers;
+    this._buttons = DefaultData;
     this._flatpickr = null;
     this._submitHandler = null;
     this._favHandler = null;
@@ -140,13 +142,12 @@ export default class EditTripEvent extends AllMightySmarty {
     this._changeDestinationHandler = null;
     this._applyFlatpickr();
     this._setCheckedOnType();
-    this._setCheckedOnOffer();
     this._setPriceInputHandler();
     this._setDestinationInputHandler();
   }
 
   getTemplate() {
-    return returnEditEvent(this._tripEvent, this._availableDestinations, this._availableOffers);
+    return returnEditEvent(this._tripEvent, this._availableDestinations, this._availableOffers, this._buttons);
   }
 
   updateData(newData) {
@@ -172,7 +173,9 @@ export default class EditTripEvent extends AllMightySmarty {
   }
 
   setData(data) {
-    this._externalData = Object.assign({}, DefaultData, data);
+    this._buttons = Object.assign({}, DefaultData, data);
+    this.rerender();
+    this.recoveryListeners();
   }
 
   reset() {

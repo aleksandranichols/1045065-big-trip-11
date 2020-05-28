@@ -2,8 +2,7 @@ import API from '../api.js';
 import EditTripEvent from '../components/editevent.js';
 import TripEvent from '../components/event.js';
 import TripEventModel from '../models/event.js';
-import {Position, AUTHORIZATION_TOKEN} from '../utils/constants.js';
-import {splitAString} from '../utils/general.js';
+import {Position, AUTHORIZATION_TOKEN, SHAKE_ANIMATION_TIMEOUT} from '../utils/constants.js';
 import {renderComponent, removeComponent, toggleComponents} from '../utils/render.js';
 import moment from "moment";
 
@@ -34,6 +33,22 @@ export default class TripEventController {
     renderComponent(Position.BEFOREEND, this._tripEvent, this._container);
     this._addEventHandlers(this._unchangedData);
     this._addSupplementaryHandlers(this._unchangedData);
+  }
+
+  shake() {
+    toggleComponents(this._tripEvent, this._editTripEvent);
+    this._editTripEvent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    this._tripEvent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._editTripEvent.getElement().style.animation = ``;
+      this._tripEvent.getElement().style.animation = ``;
+
+      this._editTripEvent.setData({
+        saveButtonText: `Save`,
+        deleteButtonText: `Delete`,
+      });
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
   setDefaultView() {
@@ -80,6 +95,7 @@ export default class TripEventController {
       this._editTripEvent.setData({
         DELETE: `Deleting...`,
       });
+
       this.destroyEvent();
       newEventButton.removeAttribute(`disabled`);
     });
@@ -120,6 +136,7 @@ export default class TripEventController {
       this._editTripEvent.setData({
         SAVE: `Saving...`,
       });
+
       this._unchangedData = newData;
       toggleComponents(this._editTripEvent, this._tripEvent);
       this._onDataChange(this, data, newData);
@@ -150,16 +167,29 @@ export default class TripEventController {
     this._editTripEvent.setClickOnOffers((offers) => {
       const names = [];
       offers.forEach((input) => {
-        names.push(splitAString(input.name, `-`));
+        const inputLabel = input.labels[0];
+        names.push(inputLabel.querySelector(`.event__offer-title`).textContent);
       });
-      const checkedOffers = names.map((name) => `${name[name.length - 2]} ${name[name.length - 1]}`);
-      checkedOffers.filter((offer) => this._dummyData.offers.includes(offer));
-      this._checkedOffers = checkedOffers;
+      this._checkedOffers = names;
+      if (this._checkedOffers.length < this._dummyData.offers.length) {
+        this._dummyData.offers = this._dummyData.offers.filter((offer) => this._checkedOffers.includes(offer.title));
+      } else {
+        this._dummyData.offers = this._availableOffers.find((availableOffers) => this._dummyData.type === availableOffers.type)
+        this._dummyData.offers = this._dummyData.offers.offers.filter((offer) => this._checkedOffers.includes(offer.title));
+      }
     });
   }
 
   _addSupplementaryHandlers(data) {
     this._tripEvent.setClickHandler(() => {
+      this._unchangedData.offers.forEach((offer) => {
+        this._editTripEvent.getElement().querySelectorAll(`.event__offer-selector`).forEach((selector) => {
+          const label = selector.querySelector(`.event__offer-label .event__offer-title`);
+          if (label.textContent === offer.title) {
+            selector.querySelector(`input`).setAttribute(`checked`, ``);
+          }
+        });
+      });
       this._onViewChange();
       toggleComponents(this._tripEvent, this._editTripEvent);
       const onEscKey = (evt) => {

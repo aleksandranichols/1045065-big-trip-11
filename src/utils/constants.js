@@ -5,6 +5,8 @@ export const MAX_OFFERS_TO_SHOW = 3;
 
 // Pretend that we have authorization
 export const AUTHORIZATION_TOKEN = `Basic Zqgoo9SfdYfQuOCa33eiNMovMVDZUPpD5lENK=`;
+export const NO_EVENTS_MESSAGE = `Click New Event to create your first point`;
+export const SHAKE_ANIMATION_TIMEOUT = 600;
 
 export const Position = {
   AFTERBEGIN: `afterbegin`,
