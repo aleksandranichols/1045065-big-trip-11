@@ -1,19 +1,20 @@
+import API from './api.js';
 import Navigation from './components/navigation.js';
 import NewEventButton from './components/new-event.js';
 import NoTripEvents from './components/no-trip-events.js';
+import Statistics from './components/statistics.js';
 import TripEvents from './models/events.js';
 import TripEventModel from './models/event.js';
 import FiltersController from './controllers/filters.js';
 import TripController from './controllers/trip.js';
 import {renderComponent} from './utils/render.js';
-import {generateTripEventMocks} from './mocks/event.js';
-import {Position, NUMBER_OF_EVENTS} from './utils/constants.js';
+import {Position, Page, AUTHORIZATION_TOKEN} from './utils/constants.js';
+
+const api = new API(AUTHORIZATION_TOKEN);
 
 const tripControlsMenuHeading = document.querySelector(`.trip-controls h2:first-of-type`);
 const tripControlsFiltersHeading = document.querySelector(`.trip-controls h2:last-of-type`);
-
-renderComponent(Position.AFTEREND, new Navigation(), tripControlsMenuHeading);
-
+const bodyContainer = document.querySelector(`.page-main .page-body__container`);
 const tripList = document.querySelector(`.trip-events`);
 const body = document.querySelector(`.page-body`);
 const main = document.querySelector(`.trip-main`);

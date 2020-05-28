@@ -25,3 +25,8 @@ export const renderComponent = (place, component, container) => {
       throw new Error(`Switch case doesn't exist at renderComponent`);
   }
 };
+
+export const removeComponent = (component) => {
+  component.getElement().remove();
+  component.removeElement();
+};

@@ -55,7 +55,6 @@ export default class Sorting extends AllMighty {
           this._setCheckedOnSorting(currentSortType, oldSortType);
           handler(currentSortType);
           oldSortType = currentSortType;
-
         }
       });
     });

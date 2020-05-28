@@ -16,7 +16,10 @@ export default class FiltersController {
   }
 
   _onFilterChange(filterType) {
-    this._currentFilterType = filterType;
-    this._eventModel.setFilter(this._currentFilterType);
+    // Avoid errors when model is empty
+    if (this._eventModel.getData().length !== 0) {
+      this._currentFilterType = filterType;
+      this._eventModel.setFilter(this._currentFilterType);
+    }
   }
 }
