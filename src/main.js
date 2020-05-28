@@ -74,6 +74,4 @@ api.getEvents()
     statistics.getCharts(tripEventsModel.getData());
   }
 })
-.catch(() => {
-  renderComponent(Position.BEFOREEND, new NoTripEvents(), tripList);
-});
+.catch((error) => error.message)

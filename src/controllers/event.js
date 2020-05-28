@@ -46,7 +46,9 @@ export default class TripEventController {
     new API(AUTHORIZATION_TOKEN).getOffers()
     .then((offers) => {
       this._availableOffers.push(...offers);
-      this._editTripEvent.updateOffers(this._availableOffers);
+      if (this._editTripEvent !== undefined) {
+        this._editTripEvent.updateOffers(this._availableOffers);
+      }
     });
     return [];
   }
@@ -55,7 +57,10 @@ export default class TripEventController {
     new API(AUTHORIZATION_TOKEN).getDestinations()
     .then((offers) => {
       this._availableDestinations.push(...offers);
-      this._editTripEvent.updateDestinations(this._availableDestinations);
+
+      if (this._editTripEvent !== undefined) {
+        this._editTripEvent.updateDestinations(this._availableDestinations);
+      }
     });
     return [];
   }
