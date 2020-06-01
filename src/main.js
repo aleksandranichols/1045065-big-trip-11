@@ -1,19 +1,17 @@
 import API from './api.js';
 import Navigation from './components/navigation.js';
-import NewEventButton from './components/new-event.js';
+import NewEventButton from './components/new-event-button.js';
 import NoTripEvents from './components/no-trip-events.js';
 import Statistics from './components/statistics.js';
-import TripEvents from './models/events.js';
-import TripEventModel from './models/event.js';
-import FiltersController from './controllers/filters.js';
-import TripController from './controllers/trip.js';
+import TripEventsModel from './models/trip-events-model.js';
+import TripEventModel from './models/trip-event-model.js';
+import TripController from './controllers/trip-controller.js';
 import {renderComponent, removeComponent} from './utils/render.js';
 import {Position, Page, AUTHORIZATION_TOKEN, NO_EVENTS_MESSAGE} from './utils/constants.js';
 
 const api = new API(AUTHORIZATION_TOKEN);
 
 const tripControlsMenuHeading = document.querySelector(`.trip-controls h2:first-of-type`);
-const tripControlsFiltersHeading = document.querySelector(`.trip-controls h2:last-of-type`);
 const bodyContainer = document.querySelector(`.page-main .page-body__container`);
 const tripList = document.querySelector(`.trip-events`);
 const body = document.querySelector(`.page-body`);
@@ -21,19 +19,6 @@ const main = document.querySelector(`.trip-main`);
 const navigation = new Navigation();
 const statistics = new Statistics();
 renderComponent(Position.AFTEREND, navigation, tripControlsMenuHeading);
-
-export const returnNewEvent = () => {
-  return {
-    "base_price": 0,
-    "date_from": new Date(),
-    "date_to": new Date(),
-    "id": Math.floor(Math.random() * 10001),
-    "is_favorite": false,
-    "type": `transport`,
-    "offers": {"price": `0`, "title": ``},
-    "destination": {"desciption": ``, "name": ``, "pictures": []}
-  };
-};
 
 const noEvents = new NoTripEvents();
 renderComponent(Position.BEFOREEND, noEvents, tripList);
@@ -43,19 +28,18 @@ api.getEvents()
     noEvents.updateData(NO_EVENTS_MESSAGE);
     const newEventButton = new NewEventButton();
     renderComponent(Position.BEFOREEND, newEventButton, main);
-    const tripEventsModel = new TripEvents(events);
-    const tripEventModel = new TripEventModel(returnNewEvent());
+    const tripEventsModel = new TripEventsModel(events);
+    const tripEventModel = TripEventModel.returnNewEvent();
     new TripController(body, tripEventsModel, api).createNewEvent(newEventButton, tripEventModel);
   } else {
     removeComponent(noEvents);
     const newEventButton = new NewEventButton();
     renderComponent(Position.BEFOREEND, newEventButton, main);
     renderComponent(Position.AFTERBEGIN, statistics, bodyContainer);
-    const tripEventsModel = new TripEvents(events);
+    const tripEventsModel = new TripEventsModel(events);
     const tripController = new TripController(body, tripEventsModel, api);
-    const tripEventModel = new TripEventModel(returnNewEvent());
+    const tripEventModel = TripEventModel.returnNewEvent();
     tripController.createNewEvent(newEventButton, tripEventModel);
-    new FiltersController(tripControlsFiltersHeading, tripEventsModel).render();
     tripController.render();
 
     const displayContentByPage = (page) => {

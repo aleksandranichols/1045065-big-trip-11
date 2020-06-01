@@ -1,4 +1,4 @@
-import AllMighty from './allmighty.js';
+import AllMighty from './all-mighty.js';
 
 export default class AllMightySmarty extends AllMighty {
   constructor() {

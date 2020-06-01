@@ -1,7 +1,6 @@
-import AllMighty from './allmighty.js';
+import AllMighty from './all-mighty.js';
 import EventOffers from './event-offers.js';
-import {returnEventDates, addArticleToEventType} from '../utils/event-helpers.js';
-import {splitAString} from '../utils/general.js';
+import {returnEventDates, addArticleToEventType, splitAString} from '../utils/event-helpers.js';
 import {TRANSPORT_TYPES, MAX_OFFERS_TO_SHOW} from '../utils/constants.js';
 
 const returnEvent = (tripEvent) => {
@@ -10,12 +9,7 @@ const returnEvent = (tripEvent) => {
   let type = tripEvent.type;
   const eventIcon = splitAString(type, ` `);
   type = addArticleToEventType(type.charAt(0).toUpperCase() + type.slice(1), TRANSPORT_TYPES);
-  let eventOffers = ``;
-  if (tripEvent.offers.title !== ``) {
-    eventOffers = new EventOffers(tripEvent.offers.slice(0, MAX_OFFERS_TO_SHOW)).getEventTemplate();
-  } else {
-    eventOffers = ``;
-  }
+  const eventOffers = tripEvent.offers.title === `` ? `` : new EventOffers(tripEvent.offers.slice(0, MAX_OFFERS_TO_SHOW)).getEventTemplate();
 
   return `<li class="trip-events__item">
   <div class="event">

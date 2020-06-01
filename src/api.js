@@ -1,4 +1,4 @@
-import TripEventModel from './models/event.js';
+import TripEventModel from './models/trip-event-model.js';
 import {Method} from './utils/constants.js';
 
 const checkStatus = (response) => {

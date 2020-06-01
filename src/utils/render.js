@@ -1,16 +1,17 @@
 import {Position} from './constants.js';
+import DOMPurify from 'dompurify';
 
-export const toggleComponents = (oldComponent, newComponent) => {
+const toggleComponents = (oldComponent, newComponent) => {
   oldComponent.getElement().replaceWith(newComponent.getElement());
 };
 
-export const createDOMElement = (template) => {
+const createDOMElement = (template) => {
   const div = document.createElement(`div`);
-  div.innerHTML = template;
+  div.innerHTML = DOMPurify.sanitize(template);
   return div.firstChild;
 };
 
-export const renderComponent = (place, component, container) => {
+const renderComponent = (place, component, container) => {
   switch (place) {
     case Position.AFTERBEGIN:
       container.prepend(component.getElement());
@@ -26,7 +27,10 @@ export const renderComponent = (place, component, container) => {
   }
 };
 
-export const removeComponent = (component) => {
+const removeComponent = (component) => {
   component.getElement().remove();
   component.removeElement();
 };
+
+
+export {toggleComponents, createDOMElement, renderComponent, removeComponent};

@@ -1,4 +1,4 @@
-import AllMighty from './allmighty.js';
+import AllMighty from './all-mighty.js';
 import {SortType} from '../utils/constants.js';
 
 const returnSorting = () => {
@@ -6,7 +6,7 @@ const returnSorting = () => {
     <span class="trip-sort__item  trip-sort__item--day">Day</span>
 
     <div class="trip-sort__item  trip-sort__item--event">
-      <input id="sort-event" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-event" checked>
+      <input id="sort-event" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-event">
       <label class="trip-sort__btn" for="sort-event" data-sort-type="${SortType.EVENT}">Event</label>
     </div>
 

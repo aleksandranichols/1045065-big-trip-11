@@ -1,6 +1,6 @@
 import moment from "moment";
 
-export const returnEventDates = (dateFrom, dateTo) => {
+const returnEventDates = (dateFrom, dateTo) => {
   const startDate = moment(dateFrom);
   const endDate = moment(dateTo);
   const startDateWithDash = startDate.format(`YYYY-MM-DD`);
@@ -18,24 +18,24 @@ export const returnEventDates = (dateFrom, dateTo) => {
     startTime, endTime, durationDiff, duration};
 };
 
-export const addArticleToEventType = (eventType, transportTypes) => {
+const addArticleToEventType = (eventType, transportTypes) => {
   const article = transportTypes.some((type) => type === eventType) === true ? `to` : `in`;
   return `${eventType} ${article}`;
 };
 
-export const calculatePriceByEventType = (tripEvents, type) => {
+const calculatePriceByEventType = (tripEvents, type) => {
   const totalPrice = tripEvents.filter((tripEvent) => tripEvent.type === type).
   map((tripEvent) => tripEvent.price).
   reduce((accumulator, tripEvent) => accumulator + tripEvent, 0);
   return totalPrice;
 };
 
-export const calculateEventTypeOccurrence = (tripEvents, type) => {
+const calculateEventTypeOccurrence = (tripEvents, type) => {
   const filteredTripEvents = tripEvents.filter((tripEvent) => tripEvent.type === type);
   return filteredTripEvents.length;
 };
 
-export const calculateEventTimeSpend = (tripEvents, type) => {
+const calculateEventTimeSpend = (tripEvents, type) => {
   let totalTimeSpend = 0;
   tripEvents.filter((tripEvent) => tripEvent.type === type).
   forEach((tripEvent) => {
@@ -44,3 +44,7 @@ export const calculateEventTimeSpend = (tripEvents, type) => {
   });
   return totalTimeSpend;
 };
+
+const splitAString = (string, delimiter) => string.split(delimiter);
+
+export {returnEventDates, addArticleToEventType, calculatePriceByEventType, calculateEventTypeOccurrence, calculateEventTimeSpend, splitAString};

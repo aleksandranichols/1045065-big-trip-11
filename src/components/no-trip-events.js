@@ -1,4 +1,4 @@
-import AllMightySmarty from './allmightysmarty.js';
+import AllMightySmarty from './all-mighty-smarty.js';
 
 const noTripEvents = (message) => (`<p class="trip-events__msg">${message}</p>`);
 

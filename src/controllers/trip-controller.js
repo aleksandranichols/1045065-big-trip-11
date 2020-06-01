@@ -1,12 +1,13 @@
 import Sorting from '../components/sorting.js';
-import TripEventController from './event.js';
-import NewEventButton from '../components/new-event.js';
-import TripInfo from '../components/tripinfo.js';
-import TripCost from '../components/tripcost.js';
-import TripList from '../components/trip-days.js';
+import FiltersController from './filters-controller.js';
+import TripEventController from './trip-event-controller.js';
+import NewEventButton from '../components/new-event-button.js';
+import TripInfo from '../components/trip-info.js';
+import TripCost from '../components/trip-cost.js';
+import TripList from '../components/trip-list.js';
 import TripDayDetails from '../components/trip-day-details.js';
-import {renderComponent} from '../utils/render.js';
-import {Position, SortType} from '../utils/constants.js';
+import {renderComponent, removeComponent} from '../utils/render.js';
+import {Position, SortType, FilterType} from '../utils/constants.js';
 import {returnEventDates} from '../utils/event-helpers.js';
 
 export default class TripController {
@@ -20,8 +21,8 @@ export default class TripController {
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
+    this._sortEvents = this._sortEvents.bind(this);
     this._eventsModel.setFilterChangeHandler(this._onFilterChange);
-    this._eventsModel.setDataChangeHandler(this._onDataChange);
   }
 
   render() {
@@ -60,6 +61,7 @@ export default class TripController {
         this._renderTripDetails();
         tripDaysList = this._container.querySelector(`.trip-days`);
       }
+      this._resetSortAndFilters();
       renderComponent(Position.BEFOREEND, tripDay, tripDaysList);
       const tripDayList = tripDay.getElement().querySelector(`.trip-events__list`);
       renderComponent(Position.AFTERBEGIN, tripDay, tripDaysList);
@@ -89,9 +91,28 @@ export default class TripController {
     }
   }
 
+  _resetSortAndFilters() {
+    const tripFilters = this._container.querySelector(`.trip-controls .trip-filters`);
+    if (tripFilters !== null) {
+      tripFilters.innerHTML = ``;
+    }
+    const tripEvents = this._container.querySelector(`.trip-events`);
+    const tripControlsFiltersHeading = this._container.querySelector(`.trip-controls h2:last-of-type`);
+    new FiltersController(this._eventsModel).render(tripControlsFiltersHeading);
+    removeComponent(this._sorting);
+    this._sorting = new Sorting();
+    renderComponent(Position.AFTERBEGIN, this._sorting, tripEvents);
+    this._eventsModel.setFilter(FilterType.DEFAULT);
+    if (this._eventsModel.getData().length !== 0) {
+      this._renderTripDays();
+    }
+  }
+
   _renderTripDetails() {
     const tripMain = this._container.querySelector(`.trip-main`);
     const tripEvents = this._container.querySelector(`.trip-events`);
+    const tripControlsFiltersHeading = this._container.querySelector(`.trip-controls h2:last-of-type`);
+    new FiltersController(this._eventsModel).render(tripControlsFiltersHeading);
     renderComponent(Position.BEFOREEND, this._sorting, tripEvents);
     renderComponent(Position.BEFOREEND, new TripList(), tripEvents);
     renderComponent(Position.AFTERBEGIN, new TripInfo(), tripMain);
@@ -144,7 +165,6 @@ export default class TripController {
       .then((eventModel) => {
         const isSuccess = this._eventsModel.addData(eventModel);
         if (isSuccess) {
-          this._newEventButton.getElement().removeAttribute(`disabled`, ``);
           const currentSort = this._container.querySelector(`input:checked ~ .trip-sort__btn`);
           this._renderEvents(currentSort.getAttribute(`data-sort-type`));
         }
@@ -173,7 +193,7 @@ export default class TripController {
 
   _onFilterChange() {
     this._renderTripDays();
-    this._sortTripEvents(`event`, this._eventsModel.getFilteredData());
+    this._sortTripEvents(SortType.EVENT, this._eventsModel.getFilteredData());
   }
 
   _sortTripEvents(sortType, eventData) {

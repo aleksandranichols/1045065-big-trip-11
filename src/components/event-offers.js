@@ -1,5 +1,5 @@
-import AllMighty from './allmighty.js';
-import {splitAString} from '../utils/general.js';
+import AllMighty from './all-mighty.js';
+import {splitAString} from '../utils/event-helpers.js';
 
 const returnOfferMarkUp = (title, price) => {
   return (`<li class="event__offer">

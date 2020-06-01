@@ -8,6 +8,7 @@ export default class TripEventModel {
     this.isFavorite = Boolean(data[`is_favorite`]);
     this.offers = Object(data[`offers`]);
     this.type = data[`type`];
+    this.isNew = Boolean(data[`is_new`]);
   }
 
   toRAW() {
@@ -21,6 +22,20 @@ export default class TripEventModel {
       "type": this.type,
       "offers": Array.from(this.offers),
     };
+  }
+
+  static returnNewEvent() {
+    return new TripEventModel({
+      "base_price": 0,
+      "date_from": new Date(),
+      "date_to": new Date(),
+      "id": Math.floor(Math.random() * 10001),
+      "is_favorite": false,
+      "type": `transport`,
+      "offers": {"price": `0`, "title": ``},
+      "destination": {"desciption": ``, "name": ``, "pictures": []},
+      "is_new": true,
+    });
   }
 
   static parseEvent(data) {

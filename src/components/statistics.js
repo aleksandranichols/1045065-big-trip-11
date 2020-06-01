@@ -1,5 +1,5 @@
 import {calculatePriceByEventType, calculateEventTypeOccurrence, calculateEventTimeSpend} from '../utils/event-helpers.js';
-import AllMighty from './allmighty.js';
+import AllMighty from './all-mighty.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 

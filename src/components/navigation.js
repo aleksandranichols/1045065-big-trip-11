@@ -1,4 +1,4 @@
-import AllMighty from './allmighty.js';
+import AllMighty from './all-mighty.js';
 import {Page} from '../utils/constants.js';
 
 const returnNavigation = () => (`<nav class="trip-controls__trip-tabs  trip-tabs">

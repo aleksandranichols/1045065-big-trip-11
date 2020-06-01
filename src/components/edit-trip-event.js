@@ -1,7 +1,6 @@
-import AllMightySmarty from './allmightysmarty.js';
+import AllMightySmarty from './all-mighty-smarty.js';
 import EventOffers from './event-offers.js';
-import {addArticleToEventType, returnEventDates} from '../utils/event-helpers';
-import {splitAString} from '../utils/general.js';
+import {addArticleToEventType, returnEventDates, splitAString} from '../utils/event-helpers';
 import {DefaultData, TRANSPORT_TYPES, ACTIVITY_TYPES} from '../utils/constants.js';
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
@@ -26,16 +25,19 @@ const returnEditEvent = (tripEvent, availableDestinations, availableOffers, butt
   const eventIcon = `img/icons/${splitAString(type, ` `)[0]}.png`;
   type = addArticleToEventType(type.charAt(0).toUpperCase() + type.slice(1), TRANSPORT_TYPES);
   const isFavorite = tripEvent.isFavorite === false ? `` : `checked`;
+  const isNew = tripEvent.isNew === true ? `hidden` : `displayed`;
 
   let eventOffers = ``;
   const offers = availableOffers.find((offer) => offer.type === tripEvent.type);
-  if (offers === undefined) {
-    eventOffers = new EventOffers(tripEvent.offers).getEventTemplateOnEdit();
-  } else {
-    eventOffers = new EventOffers(offers.offers).getEventTemplateOnEdit();
-  }
+  eventOffers = offers === undefined ? new EventOffers(tripEvent.offers).getEventTemplateOnEdit() : eventOffers = new EventOffers(offers.offers).getEventTemplateOnEdit();
 
-  const returnPicturesMarkUp = () => pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join(`\n`);
+  let returnPicturesMarkUp = ``;
+  if (pictures.length !== 0) {
+    const picturesMarkUp = pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join(`\n`);
+    returnPicturesMarkUp = (`<div class="event__photos-container">
+      <div class="event__photos-tape">${picturesMarkUp}</div>
+      </div>`);
+  }
   const returnCitiesMarkUp = () => availableDestinations.map((destination) => `<option value="${destination.name}"></option>`).join(`\n`);
 
   const saveButton = buttons.SAVE;
@@ -105,7 +107,7 @@ const returnEditEvent = (tripEvent, availableDestinations, availableOffers, butt
         </svg>
       </label>
 
-      <button class="event__rollup-btn" type="button">
+      <button class="event__rollup-btn ${isNew}" type="button">
         <span class="visually-hidden">Open event</span>
       </button>
     </header>
@@ -115,11 +117,7 @@ const returnEditEvent = (tripEvent, availableDestinations, availableOffers, butt
       <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">${name}</h3>
         <p class="event__destination-description">${description}</p>
-        <div class="event__photos-container">
-          <div class="event__photos-tape">
-            ${returnPicturesMarkUp()}
-          </div>
-        </div>
+            ${returnPicturesMarkUp}
       </section>
     </section>
   </form>
@@ -134,6 +132,7 @@ export default class EditTripEvent extends AllMightySmarty {
     this._availableOffers = availableOffers;
     this._buttons = DefaultData;
     this._flatpickr = null;
+    this._clickHandler = null;
     this._submitHandler = null;
     this._favHandler = null;
     this._delHandler = null;
@@ -183,6 +182,7 @@ export default class EditTripEvent extends AllMightySmarty {
   }
 
   recoveryListeners() {
+    this.setClickHandler(this._clickHandler);
     this.setSubmitHandler(this._submitHandler);
     this.setClickOnFavHandler(this._favHandler);
     this.setClickOnDelHandler(this._delHandler);
@@ -192,6 +192,11 @@ export default class EditTripEvent extends AllMightySmarty {
     this._applyFlatpickr();
     this._setPriceInputHandler();
     this._setDestinationInputHandler();
+  }
+
+  setClickHandler(handler) {
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
+    this._clickHandler = handler;
   }
 
   setSubmitHandler(handler) {

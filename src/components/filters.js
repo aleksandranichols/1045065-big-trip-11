@@ -1,4 +1,4 @@
-import AllMighty from './allmighty.js';
+import AllMighty from './all-mighty.js';
 import {FilterType} from '../utils/constants.js';
 
 const returnFilters = () => (`<form class="trip-filters" action="#" method="get">

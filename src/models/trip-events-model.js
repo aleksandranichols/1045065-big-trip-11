@@ -1,7 +1,7 @@
 import {FilterType} from '../utils/constants';
 import {returnEventDates} from '../utils/event-helpers.js';
 
-export default class TripEvents {
+export default class TripEventsModel {
   constructor(data) {
     this._currentFilter = FilterType.DEFAULT;
     this._tripEventData = data;
@@ -15,23 +15,6 @@ export default class TripEvents {
 
   getFilteredData() {
     return this._getDataByAFilterType(this._currentFilter);
-  }
-
-  getEmptyEvent() {
-    return {
-      destination: {
-        name: ``,
-        description: ``,
-        pictures: []
-      },
-      endDate: new Date(),
-      id: Math.random(),
-      isFavorite: false,
-      offers: [],
-      price: 0,
-      startDate: new Date(),
-      type: `transport`
-    };
   }
 
   addData(newTripEventData) {
@@ -57,10 +40,6 @@ export default class TripEvents {
 
   setFilterChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
-  }
-
-  setDataChangeHandler(handler) {
-    this._dataChangeHandlers.push(handler);
   }
 
   _callHandlers(handlers) {

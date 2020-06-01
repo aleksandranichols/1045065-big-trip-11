@@ -1,44 +1,47 @@
-export const TRANSPORT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
-export const ACTIVITY_TYPES = [`Check-in`, `Sightseeing`, `Restaurant`];
-export const TYPES = [].concat(TRANSPORT_TYPES, ACTIVITY_TYPES);
-export const MAX_OFFERS_TO_SHOW = 3;
+const TRANSPORT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
+const ACTIVITY_TYPES = [`Check-in`, `Sightseeing`, `Restaurant`];
+const TYPES = [].concat(TRANSPORT_TYPES, ACTIVITY_TYPES);
+const MAX_OFFERS_TO_SHOW = 3;
 
 // Pretend that we have authorization
-export const AUTHORIZATION_TOKEN = `Basic Zqgoo9SfdYfQuOCa33eiNMovMVDZUPpD5lENK=`;
-export const NO_EVENTS_MESSAGE = `Click New Event to create your first point`;
-export const SHAKE_ANIMATION_TIMEOUT = 600;
+const AUTHORIZATION_TOKEN = `Basic Zqgoo9SfdYfQuOCa33eiNMovMVDZUPpD5lENK=`;
+const NO_EVENTS_MESSAGE = `Click New Event to create your first point`;
+const SHAKE_ANIMATION_TIMEOUT = 600;
 
-export const Position = {
+const Position = {
   AFTERBEGIN: `afterbegin`,
   AFTEREND: `afterend`,
   BEFOREEND: `beforeend`
 };
 
-export const SortType = {
+const SortType = {
   EVENT: `event`,
   PRICE: `price`,
   TIME: `time`
 };
 
-export const FilterType = {
+const FilterType = {
   DEFAULT: `default`,
   FUTURE: `future`,
   PAST: `past`
 };
 
-export const Page = {
+const Page = {
   TABLE: `table`,
   STATS: `stats`,
 };
 
-export const DefaultData = {
+const DefaultData = {
   DELETE: `Delete`,
   SAVE: `Save`,
 };
 
-export const Method = {
+const Method = {
   GET: `GET`,
   POST: `POST`,
   PUT: `PUT`,
   DELETE: `DELETE`
 };
+
+export {TRANSPORT_TYPES, ACTIVITY_TYPES, TYPES, MAX_OFFERS_TO_SHOW, AUTHORIZATION_TOKEN, NO_EVENTS_MESSAGE, SHAKE_ANIMATION_TIMEOUT,
+  Position, SortType, FilterType, Page, DefaultData, Method};

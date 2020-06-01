@@ -1,4 +1,4 @@
-import AllMighty from './allmighty.js';
+import AllMighty from './all-mighty.js';
 
 const returnTripList = () =>
   (`<ul class="trip-days">

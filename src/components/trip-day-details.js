@@ -1,4 +1,4 @@
-import AllMighty from './allmighty.js';
+import AllMighty from './all-mighty.js';
 import {returnEventDates} from '../utils/event-helpers.js';
 
 export const returnTripDayDetails = (tripEvent, counter) => {

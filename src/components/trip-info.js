@@ -1,4 +1,4 @@
-import AllMighty from './allmighty.js';
+import AllMighty from './all-mighty.js';
 
 const returnTripInfo = () => (`<section class="trip-main__trip-info  trip-info">
   <div class="trip-info__main">
